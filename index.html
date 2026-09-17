@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이력서 &amp; 자기소개서 작성법</title>
+<style>
+  :root{
+    --bg:#05060a;--bg2:#0a0d16;--surface:#0d1220;--surface-2:#111830;
+    --text:#dff5ff;--text-soft:#7fa3b8;
+    --border:#1c3348;--border-glow:#1f4a5c;
+    --cyan:#2ef2e8;--magenta:#ff3ddb;--violet:#9b6bff;--amber:#ffcb47;--green:#3dffa0;
+    --shadow:0 0 0 1px rgba(46,242,232,.06), 0 12px 40px rgba(0,0,0,.55);
+    --radius:14px;
+    --mono:"Consolas","SFMono-Regular","Cascadia Code","JetBrains Mono",ui-monospace,monospace;
+    --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(46,242,232,.10), transparent 60%),
+      radial-gradient(ellipse 900px 500px at 100% 10%, rgba(255,61,219,.08), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(46,242,232,.035) 0px, rgba(46,242,232,.035) 1px, transparent 1px, transparent 42px),
+      repeating-linear-gradient(90deg, rgba(46,242,232,.035) 0px, rgba(46,242,232,.035) 1px, transparent 1px, transparent 42px),
+      var(--bg);
+    color:var(--text);line-height:1.7;font-family:var(--sans);-webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(46,242,232,.3);color:#fff}
+  a{color:var(--cyan)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px}
+
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:200;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.08) 0px, rgba(0,0,0,.08) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode:overlay;opacity:.5}
+
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(5,6,10,.72);
+    backdrop-filter:blur(10px) saturate(140%);border-bottom:1px solid var(--border)}
+  .nav-inner{max-width:920px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .brand{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--cyan);letter-spacing:.04em;
+    text-shadow:0 0 8px rgba(46,242,232,.6)}
+  .brand::before{content:"▍";color:var(--magenta);margin-right:6px;animation:blink 1.1s steps(1) infinite}
+  .nav-links{display:flex;gap:20px;font-size:12.5px;font-family:var(--mono);color:var(--text-soft)}
+  .nav-links a{color:inherit;text-decoration:none;letter-spacing:.03em}
+  .nav-links a::before{content:"// "}
+  .nav-links a:hover{color:var(--cyan)}
+  .theme-btn{border:1px solid var(--border);background:var(--surface);color:var(--cyan);
+    width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:13px;display:grid;place-items:center;
+    box-shadow:0 0 10px rgba(46,242,232,.15) inset}
+  .theme-btn:hover{border-color:var(--cyan)}
+  @media(max-width:660px){.nav-links{display:none}}
+
+  @keyframes blink{50%{opacity:0}}
+  @keyframes flicker{0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.4} 94%{opacity:1} 96%{opacity:.6} 97%{opacity:1}}
+
+  .hero{padding:70px 0 44px}
+  .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;font-weight:600;
+    color:var(--cyan);border:1px solid var(--border-glow);background:rgba(46,242,232,.06);
+    padding:6px 12px;border-radius:999px;letter-spacing:.04em;box-shadow:0 0 14px rgba(46,242,232,.12) inset}
+  .eyebrow.pink{color:var(--magenta);border-color:#4a1c3f;background:rgba(255,61,219,.06);box-shadow:0 0 14px rgba(255,61,219,.12) inset}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;animation:blink 1.6s infinite}
+
+  h1{font-family:var(--mono);font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:-.01em;font-weight:800;line-height:1.3;
+    color:#fff;text-shadow:0 0 18px rgba(46,242,232,.35), 0 0 40px rgba(255,61,219,.12);animation:flicker 7s infinite}
+  h1 .grad{background:linear-gradient(90deg,var(--cyan),var(--violet) 55%,var(--magenta));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{margin-top:18px;color:var(--text-soft);max-width:58ch;font-size:15px}
+
+  section{padding:48px 0;border-top:1px solid var(--border)}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+  .idx{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--magenta);
+    background:rgba(255,61,219,.08);border:1px solid #4a1c3f;padding:3px 9px;border-radius:6px}
+  h2{font-family:var(--mono);font-size:1.3rem;letter-spacing:-.01em;font-weight:700;color:#fff}
+  h2::before{content:"# ";color:var(--cyan)}
+  .sub{color:var(--text-soft);font-size:13.5px;margin-bottom:24px;max-width:62ch;font-family:var(--mono)}
+
+  .card{background:linear-gradient(180deg,var(--surface),var(--bg2));border:1px solid var(--border);
+    border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .card + .card{margin-top:14px}
+  .card .tbar{display:flex;align-items:center;gap:6px;padding:9px 14px;border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,.02)}
+  .tbar i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .tbar i:nth-child(1){background:#ff5f57}
+  .tbar i:nth-child(2){background:#febc2e}
+  .tbar i:nth-child(3){background:#28c840}
+  .tbar span{margin-left:8px;font-family:var(--mono);font-size:11px;color:var(--text-soft)}
+  .card .body{padding:20px 22px}
+  .card p{color:var(--text-soft);font-size:14.5px}
+  .card p + p{margin-top:12px}
+  .card b{color:var(--text)}
+
+  .rule{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed var(--border)}
+  .rule:last-child{border-bottom:none}
+  .rule .no{flex:none;width:26px;height:26px;border-radius:7px;border:1px solid var(--cyan);color:var(--cyan);
+    display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:800;
+    box-shadow:0 0 10px rgba(46,242,232,.25) inset}
+  .rule h3{font-size:14.5px;font-weight:700;color:#fff;margin-bottom:4px}
+  .rule p{font-size:13.5px;color:var(--text-soft)}
+
+  /* before/after diff */
+  .diff{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:6px}
+  @media(max-width:600px){.diff{grid-template-columns:1fr}}
+  .diff > div{padding:14px 16px;font-size:13.5px;font-family:var(--mono)}
+  .diff .bad{background:rgba(255,61,219,.05);border-right:1px solid var(--border)}
+  @media(max-width:600px){.diff .bad{border-right:none;border-bottom:1px solid var(--border)}}
+  .diff .good{background:rgba(61,255,160,.05)}
+  .diff .tag{display:block;font-size:10.5px;letter-spacing:.06em;margin-bottom:6px;font-weight:700}
+  .diff .bad .tag{color:var(--magenta)}
+  .diff .good .tag{color:var(--green)}
+  .diff .bad div.txt{color:#e8b8dd}
+  .diff .good div.txt{color:#bdf5da}
+
+  /* swap table */
+  .swap{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .swap-row{display:grid;grid-template-columns:1fr 32px 1fr;align-items:center;gap:10px;
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px}
+  @media(max-width:560px){.swap-row{grid-template-columns:1fr 24px 1fr;font-size:13px}}
+  .swap-row .from{color:var(--text-soft);font-family:var(--mono);font-size:13.5px;text-decoration:line-through;text-decoration-color:var(--magenta)}
+  .swap-row .arrow{text-align:center;color:var(--cyan);font-weight:800}
+  .swap-row .to{color:#fff;font-family:var(--mono);font-size:13.5px;font-weight:700}
+
+  .checklist{display:flex;flex-direction:column;gap:10px}
+  .checklist li{list-style:none;display:flex;gap:10px;font-size:14px;background:var(--surface);
+    border:1px solid var(--border);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);color:var(--text-soft)}
+  .checklist .box{flex:none;width:18px;height:18px;border-radius:5px;border:1px solid var(--cyan);margin-top:2px}
+
+  footer{padding:36px 0 60px;text-align:center;color:var(--text-soft);font-size:12px;border-top:1px solid var(--border);font-family:var(--mono)}
+  footer::before{content:"// ";color:var(--cyan)}
+
+  body.lite::before{opacity:.15}
+  body.lite h1{animation:none;text-shadow:none}
+  body.lite .eyebrow .dot,body.lite .brand::before{animation:none}
+  body.lite .rule .no{box-shadow:none}
+  body.lite .eyebrow,body.lite .eyebrow.pink{box-shadow:none}
+  @media(prefers-reduced-motion:reduce){h1,.eyebrow .dot,.brand::before{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">RESUME.EXE</span>
+    <nav class="nav-links">
+      <a href="#growth">growth</a>
+      <a href="#trait">trait</a>
+      <a href="#checklist">checklist</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" aria-label="글로우 효과 전환" title="글로우 효과 끄기/켜기">◐</button>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <section class="hero" style="border-top:none">
+      <div class="tag-row">
+        <span class="eyebrow"><span class="dot"></span>LECTURE // RESUME &amp; COVER LETTER</span>
+        <span class="eyebrow pink"><span class="dot"></span>WRITE LIKE A REPORT, NOT A DIARY</span>
+      </div>
+      <h1>이력서 &amp; <span class="grad">자기소개서</span> 작성법</h1>
+      <p>이력서와 자기소개서는 나의 감상문이 아니라, 채용 담당자가 "이 사람을 뽑아야 하는 이유"를 확인하는 문서입니다. 어조와 논리 구조부터 바꿔봅니다.</p>
+    </section>
+
+    <section id="growth">
+      <div class="sec-head"><span class="idx">01</span><h2>growth_background.md</h2></div>
+      <p class="sub">// 성장 배경</p>
+
+      <div class="card">
+        <div class="tbar"><i></i><i></i><i></i><span>writing_rules.md</span></div>
+        <div class="body">
+          <div class="rule">
+            <div class="no">01</div>
+            <div><h3>부모님 이야기는 직업 연관성이 있을 때만</h3><p>채용 담당자는 부모님이 누구인지 궁금하지 않습니다. 부모님의 직업이 지금의 진로 선택과 직접 연결될 때만 언급하는 것이 의미가 있습니다.</p></div>
+          </div>
+          <div class="rule">
+            <div class="no">02</div>
+            <div><h3>"나는", "저는"은 기본적으로 생략</h3><p>이력서·자소서는 본인이 쓰는 글이라는 전제가 이미 있습니다. 문장마다 주어를 반복하면 분량만 늘고 힘이 빠집니다.</p></div>
+          </div>
+          <div class="rule">
+            <div class="no">03</div>
+            <div><h3>"생각합니다" → "확인됩니다", "분석됩니다"</h3><p>감상 위주의 어조 대신, 관찰하고 검증한 사실을 보고하는 어조로 바꿉니다. 같은 내용이라도 신뢰도가 달라집니다.</p></div>
+          </div>
+          <div class="rule">
+            <div class="no">04</div>
+            <div><h3>고등학교 → 대학 → 지원까지 논리적으로 연결</h3><p>왜 게임콘텐츠전공에 왔는지, 그 다음 왜 이 회사·직무에 지원하게 되었는지가 하나의 흐름으로 이어져야 합니다. 각 단계는 앞 단계의 결과여야 합니다.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tbar"><i></i><i></i><i></i><span>before_after.diff</span></div>
+        <div class="body">
+          <p style="margin-bottom:10px">같은 문장을 규칙 2·3에 맞춰 바꾼 예시입니다.</p>
+          <div class="diff">
+            <div class="bad"><span class="tag">BEFORE</span><div class="txt">저는 어릴 때부터 게임을 좋아했다고 생각합니다. 그래서 저는 게임콘텐츠전공에 진학하게 되었습니다.</div></div>
+            <div class="good"><span class="tag">AFTER</span><div class="txt">어릴 때부터 다양한 게임을 플레이하며 콘텐츠 구조에 대한 관심이 확인됨. 이 관심은 게임콘텐츠전공 진학으로 이어짐.</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="trait">
+      <div class="sec-head"><span class="idx">02</span><h2>personality.md</h2></div>
+      <p class="sub">// 성격의 장단점</p>
+
+      <div class="card">
+        <div class="tbar"><i></i><i></i><i></i><span>writing_rules.md</span></div>
+        <div class="body">
+          <div class="rule">
+            <div class="no">01</div>
+            <div><h3>단점은 표현을 바꿔 강점으로 연결</h3><p>단점 자체를 숨기기보다, 같은 특성이 상황에 따라 강점이 되는 지점을 찾아 보여줍니다.</p></div>
+          </div>
+          <div class="rule">
+            <div class="no">02</div>
+            <div><h3>나의 강점을 근거와 함께 명확히 보여줌</h3><p>"성실합니다" 같은 선언이 아니라, 그 성실함이 드러난 상황·결과를 함께 제시합니다.</p></div>
+          </div>
+          <div class="rule">
+            <div class="no">03</div>
+            <div><h3>내가 원하는 것이 무엇인지 분명히 말함</h3><p>회사가 나를 왜 뽑아야 하는지뿐 아니라, 내가 이 회사에서 무엇을 얻고 싶은지도 함께 드러나야 설득력이 생깁니다.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tbar"><i></i><i></i><i></i><span>reframe.map</span></div>
+        <div class="body">
+          <p style="margin-bottom:10px">단점 → 강점 리프레이밍 예시. 실제 자신의 경험(사례)을 붙여야 설득력이 생깁니다.</p>
+          <div class="swap">
+            <div class="swap-row"><span class="from">게으름</span><span class="arrow">→</span><span class="to">신중함 · 불필요한 시행착오를 줄이는 성향</span></div>
+            <div class="swap-row"><span class="from">결정장애</span><span class="arrow">→</span><span class="to">신중함 · 선택 전 여러 대안을 끝까지 검토하는 성향</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist">
+      <div class="sec-head"><span class="idx">03</span><h2>submit.checklist</h2></div>
+      <p class="sub">// 제출 전 스스로 점검하기</p>
+      <ul class="checklist">
+        <li><span class="box"></span><span>"나는", "저는"을 문장마다 반복하지 않았는가?</span></li>
+        <li><span class="box"></span><span>"~라고 생각합니다" 대신 "확인됨/분석됨" 같은 보고체로 바꿀 문장이 있는가?</span></li>
+        <li><span class="box"></span><span>고등학교 → 전공 선택 → 지원 동기가 하나의 논리로 이어지는가?</span></li>
+        <li><span class="box"></span><span>단점을 말할 때, 같은 특성의 강점 측면과 실제 사례를 함께 붙였는가?</span></li>
+        <li><span class="box"></span><span>내가 이 회사에서 얻고 싶은 것이 문장으로 분명히 드러나는가?</span></li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<footer><div class="wrap">RESUME.EXE · source: 이력서 &amp; 자기소개서.md</div></footer>
+
+<script>
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    document.body.classList.toggle('lite');
+  });
+</script>
+
+</body>
+</html>

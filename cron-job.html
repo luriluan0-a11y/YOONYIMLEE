@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>크론잡 실습 기록 · 이윤임</title>
+<meta name="description" content="크론잡(예약 실행) 개념 정리와, Windows 작업 스케줄러로 포트폴리오 자동 업로드·주간 학습 요약을 만든 실습 기록">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --text: #1d1f23;
+    --muted: #5f6570;
+    --line: #e4e4e0;
+    --accent: #2f6fed;
+    --accent-soft: #e8efff;
+    --ok: #1f8a5b;
+    --ok-soft: #e3f4ec;
+    --warn: #b4570b;
+    --warn-soft: #fdf0e2;
+    --code-bg: #f0f1f3;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121417;
+      --surface: #1b1e23;
+      --text: #e9eaec;
+      --muted: #a2a8b3;
+      --line: #2c3037;
+      --accent: #7aa2ff;
+      --accent-soft: #1f2a44;
+      --ok: #5fd39c;
+      --ok-soft: #173326;
+      --warn: #f2a65a;
+      --warn-soft: #3a2a18;
+      --code-bg: #24282f;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+  a { color: var(--accent); }
+  code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.92em; background: var(--code-bg); padding: 1px 6px; border-radius: 5px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+  nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 12px; }
+  nav a { text-decoration: none; font-size: 14px; color: var(--muted); white-space: nowrap; }
+  nav a.home { font-weight: 700; color: var(--text); font-size: 16px; }
+  nav ul { display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; overflow-x: auto; }
+
+  header.hero { padding: 56px 0 36px; }
+  .eyebrow { display: inline-block; font-size: 13px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 999px; }
+  .hero h1 { font-size: clamp(28px, 5.5vw, 40px); line-height: 1.3; margin: 14px 0 10px; letter-spacing: -0.02em; }
+  .hero p { color: var(--muted); font-size: 17px; margin: 0; max-width: 660px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .tag { font-size: 12.5px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+
+  section { padding: 44px 0; border-top: 1px solid var(--line); }
+  section h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 22px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .card + .card { margin-top: 14px; }
+  .card h3 { margin: 0 0 8px; font-size: 18px; }
+  .card p { margin: 0 0 10px; }
+  .card p:last-child { margin-bottom: 0; }
+  .muted { color: var(--muted); }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .compare > div { border-radius: 12px; padding: 16px 18px; border: 1px solid var(--line); background: var(--surface); }
+  .compare b { display: block; margin-bottom: 4px; }
+  .compare .big { font-size: 28px; }
+
+  /* 크론 시간표 */
+  .cron { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; text-align: center; margin: 6px 0 16px; }
+  .cron div { background: var(--accent-soft); border-radius: 10px; padding: 12px 6px; }
+  .cron b { display: block; font-family: ui-monospace, Consolas, monospace; font-size: 22px; color: var(--accent); }
+  .cron span { font-size: 13px; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 13px; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+
+  /* 흐름 */
+  .flow { display: flex; flex-direction: column; gap: 0; margin: 8px 0 4px; }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+  .step .dot { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 15px; }
+  @media (prefers-color-scheme: dark) { .step .dot { color: #0d1220; } }
+  .step .body { padding: 5px 0 18px; }
+  .step .body b { display: block; }
+  .step .body span { color: var(--muted); font-size: 15px; }
+  .step:not(:last-child) .dot { box-shadow: 0 34px 0 -15px var(--line), 0 52px 0 -15px var(--line); }
+
+  .badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-right: 6px; }
+  .badge.ok { background: var(--ok-soft); color: var(--ok); }
+  .badge.warn { background: var(--warn-soft); color: var(--warn); }
+  .badge.info { background: var(--accent-soft); color: var(--accent); }
+  td .arrow { color: var(--ok); font-weight: 600; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .split > div { border-radius: 12px; padding: 16px 18px; font-size: 15px; }
+  .split .me { background: var(--ok-soft); }
+  .split .ai { background: var(--warn-soft); }
+  .split b { display: block; margin-bottom: 6px; }
+  .split .me b { color: var(--ok); }
+  .split .ai b { color: var(--warn); }
+  .split ul { margin: 0; padding-left: 18px; }
+
+  .summary { background: var(--accent-soft); border-radius: var(--radius); padding: 22px; font-size: 17px; }
+  footer { text-align: center; font-size: 13px; color: var(--muted); padding: 28px 0 44px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 720px) {
+    header.hero { padding: 40px 0 28px; }
+    .compare, .split { grid-template-columns: 1fr; }
+    .cron { gap: 5px; }
+    .cron b { font-size: 18px; }
+    .cron span { font-size: 12px; }
+    .card { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="home" href="index.html">← 이윤임 포트폴리오</a>
+    <ul>
+      <li><a href="#concept">개념</a></li>
+      <li><a href="#built">만든 것</a></li>
+      <li><a href="#qa">찾은 문제</a></li>
+      <li><a href="#review">돌아보기</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow">학습 기록 · 2026.10.23</span>
+      <h1>크론잡: 컴퓨터에게<br>시간표를 맡기는 법</h1>
+      <p>크론잡(예약 실행)의 개념을 정리하고, Windows 작업 스케줄러로 예약 작업 2개를 직접 구성했습니다. 만드는 과정에서 찾아 고친 문제도 함께 기록했습니다.</p>
+      <div class="meta">
+        <span class="tag">크론잡</span><span class="tag">Windows 작업 스케줄러</span><span class="tag">PowerShell</span><span class="tag">Git · GitHub Pages</span><span class="tag">텔레그램 봇</span><span class="tag">Claude Code</span>
+      </div>
+    </div>
+  </header>
+
+  <section id="concept">
+    <div class="wrap">
+      <h2>1. 크론잡이란?</h2>
+      <p class="sub">정해진 시간마다 컴퓨터가 알아서 일을 하게 만드는 예약 알람입니다.</p>
+
+      <div class="compare">
+        <div><span class="big">⏰</span><b>알람 시계</b><span class="muted">매일 아침 7시에 "띠리리링" 소리를 낸다</span></div>
+        <div><span class="big">🤖</span><b>크론잡</b><span class="muted">매주 금요일 19:45에 그날 공부한 내용을 정리해서 올린다</span></div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>이름의 뜻</h3>
+        <p><b>크론(cron)</b>은 그리스어 "크로노스(시간)"에서 온 이름이고, <b>잡(job)</b>은 "할 일"입니다. 합치면 <b>시간에 맞춰 하는 일</b>입니다. 원래 리눅스·맥의 프로그램 이름이고, Windows에서는 <b>작업 스케줄러</b>가 같은 일을 합니다.</p>
+      </div>
+
+      <div class="card">
+        <h3>시간표 읽는 법: "분 시 일 월 요일"</h3>
+        <p class="muted">크론 시간표는 칸 5개로 적습니다. <code>*</code>는 "아무 때나"라는 뜻입니다.</p>
+        <div class="cron">
+          <div><b>45</b><span>분</span></div>
+          <div><b>19</b><span>시</span></div>
+          <div><b>*</b><span>일</span></div>
+          <div><b>*</b><span>월</span></div>
+          <div><b>5</b><span>요일 (금)</span></div>
+        </div>
+        <p>위 시간표 <code>45 19 * * 5</code>는 <b>매주 금요일 19시 45분</b>입니다. 요일은 0이 일요일, 5가 금요일입니다.</p>
+      </div>
+
+      <div class="table-scroll" style="margin-top:14px">
+        <table>
+          <thead><tr><th>크론 시간표</th><th>뜻</th></tr></thead>
+          <tbody>
+            <tr><td><code>0 9 * * *</code></td><td>매일 9시</td></tr>
+            <tr><td><code>0 9 * * 1-5</code></td><td>평일(월~금) 9시</td></tr>
+            <tr><td><code>*/30 * * * *</code></td><td>30분마다</td></tr>
+            <tr><td><code>0 0 1 * *</code></td><td>매달 1일 0시</td></tr>
+            <tr><td><code>45 19 * * 5</code></td><td>매주 금요일 19:45</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="built">
+    <div class="wrap">
+      <h2>2. 직접 만든 예약 작업 2개</h2>
+      <p class="sub">개념만 보는 데서 끝내지 않고, 실제로 매일 쓰는 작업에 적용했습니다.</p>
+
+      <div class="card">
+        <h3><span class="badge info">30분마다</span>포트폴리오 자동 업로드</h3>
+        <p class="muted">이 포트폴리오 사이트를 고치고 저장만 하면, 30분 안에 GitHub에 올라가 공개 페이지에 반영됩니다.</p>
+        <div class="flow">
+          <div class="step"><div class="dot">1</div><div class="body"><b>바뀐 파일이 있는지 확인</b><span>없으면 아무것도 하지 않고 끝 (알림도 보내지 않음)</span></div></div>
+          <div class="step"><div class="dot">2</div><div class="body"><b>기록(커밋)하고 GitHub 내용 먼저 받아 오기</b><span>GitHub에서 직접 고친 내용과 부딪히지 않도록</span></div></div>
+          <div class="step"><div class="dot">3</div><div class="body"><b>GitHub에 올리기 → 1~3분 뒤 공개 페이지 반영</b><span>GitHub Pages가 자동으로 다시 만든다</span></div></div>
+          <div class="step"><div class="dot">4</div><div class="body"><b>성공 ✅ / 실패 ❌ 를 텔레그램으로 알림</b><span>실패하면 어느 단계에서 왜 실패했는지와 해결 힌트를 함께 보낸다</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="badge info">매주 금 19:45</span>금요일 학습 요약</h3>
+        <p class="muted">그날 공부한 내용을 AI가 정리해 하루 기록과 이 포트폴리오의 "학습 기록"에 넣고 올립니다.</p>
+        <div class="flow">
+          <div class="step"><div class="dot">1</div><div class="body"><b>재료 모으기</b><span>그날 바뀐 노트 목록 + 그날 AI와 나눈 대화</span></div></div>
+          <div class="step"><div class="dot">2</div><div class="body"><b>AI(Claude Code)가 지시서대로 정리</b><span>하루 기록의 학습 표 채우기, 포트폴리오 학습 기록 항목 넣기</span></div></div>
+          <div class="step"><div class="dot">3</div><div class="body"><b>GitHub에 올리고 텔레그램으로 결과 알림</b><span>위의 자동 업로드 스크립트를 그대로 다시 사용</span></div></div>
+        </div>
+        <p style="margin-top:6px"><b>AI가 지켜야 할 규칙</b>도 지시서에 적어 두었습니다.</p>
+        <ul class="muted" style="margin:0;padding-left:20px">
+          <li>재료에 없는 내용은 지어내지 않는다. 재료가 없으면 아무것도 고치지 않는다.</li>
+          <li>내가 직접 쓴 하루 기록은 지우거나 바꾸지 않고, 빠진 항목만 더한다.</li>
+          <li>공개 페이지에는 학습 내용만 쓴다. 개인 생활과 비밀 정보는 쓰지 않는다.</li>
+          <li>공부만 한 것은 "정리", 직접 만든 것만 "제작"으로 써서 부풀리지 않는다.</li>
+          <li>같은 날짜는 덮어써서 두 번 들어가지 않게 한다.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>안전하게 만들기 위해 정한 것</h3>
+        <div class="table-scroll" style="margin-top:6px">
+          <table>
+            <thead><tr><th>걱정</th><th>정한 방법</th></tr></thead>
+            <tbody>
+              <tr><td>봇 토큰(비밀번호)이 새어 나갈 수 있다</td><td>채팅이나 파일에 적지 않고, 직접 실행하는 설정 창에서 입력해 이 컴퓨터의 환경 변수에만 저장</td></tr>
+              <tr><td>30분마다 알림이 와서 귀찮다</td><td>바뀐 것이 있을 때만 올리고 알림</td></tr>
+              <tr><td>컴퓨터가 꺼져 있어 금요일을 놓친다</td><td>다음에 켜질 때 실행하고, 그 주 금요일 기준으로 정리</td></tr>
+              <tr><td>무엇이 언제 실패했는지 모른다</td><td>모든 실행 결과를 기록 파일에 한 줄씩 남김</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="qa">
+    <div class="wrap">
+      <h2>3. 만들면서 찾아 고친 문제</h2>
+      <p class="sub">게임 QA를 준비하는 입장에서, "잘 돌아간다"고 믿지 않고 직접 실행해 확인했습니다.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>확인한 방법</th><th>발견한 문제 → 해결</th></tr></thead>
+          <tbody>
+            <tr><td>설정 파일을 직접 실행</td><td><span class="badge warn">문제</span>창이 열리자마자 닫힘. 원인은 Windows의 스크립트 실행 제한 <span class="arrow">→</span> 이번 실행에서만 제한을 푸는 실행 파일(.bat)을 만들어 해결. 컴퓨터 보안 설정은 바꾸지 않음</td></tr>
+            <tr><td>한글이 들어간 스크립트 점검</td><td><span class="badge warn">문제</span>Windows PowerShell 5.1이 한글을 깨뜨릴 수 있음 <span class="arrow">→</span> 파일을 한글이 깨지지 않는 형식(UTF-8 BOM)으로 저장하고, AI에게 넘기는 명령은 영어로, 실제 지시는 파일에서 읽게 함</td></tr>
+            <tr><td>예약 시간을 기다리지 않고 시험 실행</td><td><span class="badge ok">통과</span>작업 스케줄러로 실제와 같은 방식으로 실행 → 하루 기록 4개 항목 추가, 포트폴리오 반영, 공개 페이지에서 바뀐 내용 확인 (약 30초)</td></tr>
+            <tr><td>시험 결과 파일을 직접 읽기</td><td><span class="badge warn">문제</span>실제 실행 시각은 18:48인데 기록에는 "19:45"로 적힘. 지시서에 시간을 고정해 둔 탓 <span class="arrow">→</span> 날짜만 적도록 지시서 수정, 잘못된 기록도 바로잡음</td></tr>
+            <tr><td>변경이 없을 때 실행</td><td><span class="badge ok">통과</span>아무것도 올리지 않고 조용히 끝나는 것 확인</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="review">
+    <div class="wrap">
+      <h2>4. 돌아보기</h2>
+      <p class="sub">무엇을 내가 하고, 무엇을 AI가 했는지 나눠 적었습니다.</p>
+
+      <div class="split">
+        <div class="me">
+          <b>내가 한 일</b>
+          <ul>
+            <li>무엇을 언제 자동으로 할지 정하기 (30분마다, 금요일 19:45)</li>
+            <li>어느 저장소에 올릴지, 알림을 어디로 받을지 결정</li>
+            <li>텔레그램 봇 만들기 (BotFather)</li>
+            <li>예약 시간 전에 시험 실행 요청</li>
+          </ul>
+        </div>
+        <div class="ai">
+          <b>AI(Claude Code)가 한 일</b>
+          <ul>
+            <li>PowerShell 스크립트와 작업 스케줄러 등록</li>
+            <li>Git 저장소 연결과 업로드 명령</li>
+            <li>문제 원인 분석과 수정</li>
+            <li>시험 실행과 결과 확인</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>배운 점</h3>
+        <p>· 자동화는 <b>"언제(시간표) + 무엇을(할 일)"</b>만 정하면 되지만, 실제로 쓰려면 <b>실패했을 때 알 수 있는 방법</b>(기록, 알림)이 꼭 필요하다.</p>
+        <p>· 예약 작업은 시간이 될 때까지 기다리지 말고 <b>미리 한 번 돌려 보고 결과를 직접 읽어야</b> 숨은 문제를 찾을 수 있다.</p>
+        <p>· 다음에 해 볼 것: 스크립트 한 부분을 직접 읽고 고쳐 보기, GitHub Actions로 같은 일을 서버에서 돌려 보기.</p>
+      </div>
+
+      <div class="summary" style="margin-top:14px">
+        <b>한 줄 정리</b><br>
+        크론잡은 컴퓨터에게 시간표를 맡기는 것이다. 시간표를 정하는 것보다, <b>제대로 돌았는지 확인할 수 있게 만드는 것</b>이 더 중요했다.
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><a href="index.html">← 포트폴리오로 돌아가기</a> · © 2026 이윤임</footer>
+
+</body>
+</html>

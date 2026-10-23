@@ -149,6 +149,7 @@
   .log-entry time { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .log-entry h3 { font-size: 16px; margin: 0 0 6px; }
   .log-entry ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
+  .log-entry .more { display: inline-block; margin-top: 10px; font-size: 14px; font-weight: 600; text-decoration: none; padding: 5px 12px; border-radius: 8px; background: var(--accent-soft); }
 
   @media (max-width: 720px) {
     .log-entry { grid-template-columns: 1fr; gap: 4px; }
@@ -330,6 +331,7 @@
               <li>규칙 누락으로 생긴 노트 이름 오류를 찾아 고치고, 여러 AI가 같은 규칙으로 일하도록 공통 규칙 파일(AGENTS.md)로 정리</li>
               <li>IDE(통합 개발 환경)의 구성 요소를 정리하고, 게임 QA 공고 수집 스크립트를 실행해 신규 공고 정리</li>
             </ul>
+            <a class="more" href="cron-job.html">크론잡 실습 자세히 보기 →</a>
           </div>
         </article>
 <!-- LEARNING-LOG:END -->

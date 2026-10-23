@@ -143,7 +143,15 @@
   .contact p { color: var(--muted); margin: 0 0 20px; }
   footer { text-align: center; font-size: 13px; color: var(--muted); padding: 24px 0 40px; border-top: 1px solid var(--line); }
 
+  /* 학습 기록 */
+  .log-entry { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .log-entry:last-child { border-bottom: 0; }
+  .log-entry time { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .log-entry h3 { font-size: 16px; margin: 0 0 6px; }
+  .log-entry ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
+
   @media (max-width: 720px) {
+    .log-entry { grid-template-columns: 1fr; gap: 4px; }
     nav ul { gap: 14px; }
     header.hero { padding: 48px 0 32px; }
     .stats { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -163,6 +171,7 @@
     <ul>
       <li><a href="#about">소개</a></li>
       <li><a href="#projects">프로젝트</a></li>
+      <li><a href="#learning">학습 기록</a></li>
       <li><a href="#skills">기술</a></li>
       <li><a href="#history">이력</a></li>
       <li><a href="#contact">연락</a></li>
@@ -300,6 +309,30 @@
             <li>이름이 바뀐 노트 3개와 연결된 링크까지 모두 수정</li>
           </ul>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="learning">
+    <div class="wrap">
+      <h2>학습 기록</h2>
+      <p class="sub">매주 금요일, 그날 배우고 실습한 것을 정리합니다.</p>
+      <div class="card">
+<!-- LEARNING-LOG:START (자동 업데이트 영역: 최신 날짜가 위, 같은 날짜는 교체) -->
+        <article class="log-entry" data-date="2026-10-23">
+          <time datetime="2026-10-23">2026.10.23</time>
+          <div>
+            <h3>자동화 기초: 예약 실행부터 자동 배포·알림까지</h3>
+            <ul>
+              <li>크론잡(예약 실행)의 개념과 "분 시 일 월 요일" 시간표 읽는 법을 정리하고, Claude와 함께 Windows 작업 스케줄러에 예약 작업 구성</li>
+              <li>포트폴리오 사이트를 제작하고, GitHub 저장소와 연결해 30분마다 바뀐 파일만 자동으로 올리도록 구성 (PowerShell, Git, GitHub Pages)</li>
+              <li>GitHub Actions와 텔레그램 봇 알림 구조를 공부하고, 자동 업로드의 성공·실패를 텔레그램으로 알리도록 연결 (토큰은 파일에 남기지 않음)</li>
+              <li>규칙 누락으로 생긴 노트 이름 오류를 찾아 고치고, 여러 AI가 같은 규칙으로 일하도록 공통 규칙 파일(AGENTS.md)로 정리</li>
+              <li>IDE(통합 개발 환경)의 구성 요소를 정리하고, 게임 QA 공고 수집 스크립트를 실행해 신규 공고 정리</li>
+            </ul>
+          </div>
+        </article>
+<!-- LEARNING-LOG:END -->
       </div>
     </div>
   </section>

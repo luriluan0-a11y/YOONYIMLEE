@@ -205,15 +205,15 @@
         <header class="home-header">
           <a class="mini-logo" href="#" id="homeTitleButton" aria-label="타이틀로 돌아가기">집사님,<br />오늘도 야근인가요?</a>
           <div class="home-date"><span class="status-dot"></span><span id="dayLabel">2026년 1월 1일 · 목요일</span><span id="timeLabel">저녁 7:42</span></div>
-          <div class="home-resources"><span class="resource-money">₩ <strong id="moneyValue">2,450,000</strong></span><span class="resource-food">사료 <strong id="foodValue">3.00kg</strong></span><span class="resource-leave">연차 <strong id="leaveValue">12일</strong></span></div>
+          <div class="home-resources"><span class="resource-money">₩ <strong id="moneyValue">2,450,000</strong></span><span class="resource-food">사료 <strong id="foodValue">3.00kg</strong></span><span class="resource-followers">인스타 <strong id="followersValue">0</strong></span><span class="resource-leave">연차 <strong id="leaveValue">12일</strong></span></div>
         </header>
         <div class="home-content">
-          <div class="home-kicker"><span>TESTER / AFTER WORK · HOME EVENT</span><span class="home-kicker-actions"><button id="openEventAlbum" type="button">수집함 <span id="collectionCount">0 / 8</span></button><span id="dayCount">DAY 01</span></span></div>
+          <div class="home-kicker"><span id="eventTypeLabel">TESTER / AFTER WORK · HOME EVENT</span><span class="home-kicker-actions"><button id="openEventAlbum" type="button">수집함 <span id="collectionCount">0 / 12</span></button><span id="dayCount">DAY 01</span></span></div>
           <div class="home-title"><p>현관문이 열리자, 오늘의 이야기가 시작된다.</p><h2 id="eventTitle">오늘은 어떤 일이 있었을까?</h2></div>
           <div class="event-layout">
             <div class="event-art" aria-hidden="true">
               <img class="event-scene-image" id="eventSceneImage" alt="" />
-              <span class="event-art-caption">LITTLE MOMENTS AT HOME</span>
+              <span class="event-art-caption" id="eventArtCaption">LITTLE MOMENTS AT HOME</span>
             </div>
             <article class="event-card">
               <div class="event-card-top"><span id="eventCat">오늘의 고양이</span><span id="eventMood">작은 사건</span></div>
@@ -227,11 +227,11 @@
               <button class="next-day-button" id="nextDayButton" type="button">내일로 넘어가기 <span>→</span></button>
             </article>
           </div>
-          <div class="home-footnote"><span>월급일 매달 20일 · 3,000,000원</span><span>하루 사료 360g · 1kg 100,000원</span><span>연차는 아픈 고양이를 위해 아껴두기</span></div>
+          <div class="home-footnote"><span>월급일 매달 20일 · 3,000,000원</span><span>평일엔 퇴근 이벤트 · 주말엔 특별한 하루</span><span>하루 사료 360g · 1kg 100,000원</span></div>
         </div>
         <dialog class="event-album" id="eventAlbum" aria-labelledby="albumTitle">
           <div class="album-heading"><div><span>COLLECTED MOMENTS</span><h2 id="albumTitle">우리 집의 기록</h2></div><button id="closeEventAlbum" type="button" aria-label="수집함 닫기">×</button></div>
-          <p class="album-intro">퇴근 뒤에 만난 작은 사건들을 모아두었어요.</p>
+          <p class="album-intro">평일 퇴근과 주말에 만난 장면을 모아두었어요.</p>
           <div class="album-list" id="albumList"></div>
         </dialog>
       </section>

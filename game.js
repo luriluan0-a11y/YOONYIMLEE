@@ -33,7 +33,7 @@ const salaryAmount = 3000000;
 const feedBagGrams = 1000;
 const feedBagPrice = 100000;
 const illnessFee = 50000;
-const initialGameState = { day: 0, money: 2450000, foodGrams: 3000, leaveDays: 12, lastEventId: '', lastEaten: 0, lastShortage: 0, lastNotices: [], salaryMonths: [], leaveYears: [2026], collectedEvents: [] };
+const initialGameState = { day: 0, money: 2450000, foodGrams: 3000, leaveDays: 12, followers: 0, kaiHospitalDays: 0, lastEventId: '', lastEaten: 0, lastShortage: 0, lastNotices: [], salaryMonths: [], leaveYears: [2026], collectedEvents: [] };
 const events = [
   { id: 'tofu-kneading', cat: '두부 · 장모 화이트', mood: '다정한 아침', title: '침대 위의 작은 마사지', story: '이른 아침, 두부가 침대로 올라와 앞발로 이불을 꾹꾹 눌러준다. 잠이 덜 깬 집사 곁에서 한참을 골골거렸다.', outcome: '두부와 포근한 아침을 보냈다. 애정이 조금 깊어졌다.', money: 0, food: 0 },
   { id: 'tofu-greeting', cat: '두부 · 장모 화이트', mood: '반가운 퇴근', title: '현관까지 마중 나온 두부', story: '문을 열자 두부가 꼬리를 세우고 종종걸음으로 다가온다. 오늘 하루의 피로가 조금 풀리는 기분이다.', outcome: '두부가 먼저 다가와 반겨주었다.', money: 0, food: 0 },
@@ -44,6 +44,12 @@ const events = [
   { id: 'kkam-skin', cat: '깜댕이 · 블랙 캣', mood: '건강 관리', title: '깜댕이의 피부를 살펴보다', story: '깜댕이가 또 어딘가를 뒤지고 온 모양이다. 피부를 살펴보니 트러블이 보여 병원에 다녀와 관리에 필요한 비용을 냈다.', outcome: '피부병 진료 및 관리 지출', money: -50000, food: 0 },
   { id: 'kkam-trust', cat: '깜댕이 · 블랙 캣', mood: '조금 가까워진 날', title: '도망가지 않은 깜댕이', story: '퇴근해 다가가도 깜댕이는 오늘 도망가지 않았다. 조금 떨어진 자리에서 눈을 천천히 깜빡여 주었다.', outcome: '깜댕이와 한 뼘 가까워졌다.', money: 0, food: 0 }
 ];
+const weekendEvents = [
+  { id: 'weekend-cheese-ad', cat: '치즈 · 치즈 태비', mood: '첫 광고 촬영', title: '치즈, 광고 모델이 되다!', story: '인스타그램에 올린 치즈 사진을 본 기획사에서 연락이 왔다. 귀여운 치즈가 고양이 사료 광고를 찍게 되었다!', outcome: '광고 수입이 입금되었다.', money: 500000, food: 0, followers: 0, weekend: true },
+  { id: 'weekend-kai-hospital', cat: '카이 · 블랙 태비', mood: '마음 아픈 주말', title: '카이가 아파요', story: '카이가 계속 토하고 먹지를 못한다. 병원에 데려가니 며칠 입원해야 한다고 한다. 마음이 너무 아프지만, 지금은 치료가 먼저다.', outcome: '카이 입원 3일 × 하루 200,000원', money: -600000, food: 0, followers: 0, hospitalDays: 3, weekend: true },
+  { id: 'weekend-tofu-princess', cat: '두부 · 장모 화이트', mood: '공주님 촬영회', title: '두부의 인생 사진', story: '두부가 무슨 바람이 불었는지 인스타그램에 올릴 사진에 포즈를 너무 잘 잡아준다. 공주님 코스튬까지 완벽하게 소화해 인기 짱!', outcome: '인스타그램 팔로워가 100명 늘었다.', money: 0, food: 0, followers: 100, weekend: true },
+  { id: 'weekend-kkam-song', cat: '깜댕이 · 블랙 캣', mood: '행복 충전', title: '낭만고양이와 깜댕이', story: '까칠한 깜댕이가 내가 부르는 낭만고양이 노래에 반응해 고개를 까딱인다. 그 모습이 너무 예뻐서 한참을 바라봤다.', outcome: '집사의 행복 충전 완료!', money: 0, food: 0, followers: 0, weekend: true }
+];
 const generatedEventArt = {
   'tofu-kneading': '/ai-images/event-tofu-kneading.webp',
   'tofu-greeting': '/ai-images/event-tofu-greeting.webp',
@@ -52,8 +58,14 @@ const generatedEventArt = {
   'kai-mouse': '/ai-images/event-kai-mouse.webp',
   'kai-toy': '/ai-images/event-kai-toy.webp',
   'kkam-skin': '/ai-images/event-kkam-care.webp',
-  'kkam-trust': '/ai-images/event-kkam-trust.webp'
+  'kkam-trust': '/ai-images/event-kkam-trust.webp',
+  'weekend-cheese-ad': '/ai-images/weekend-cheese-ad.webp',
+  'weekend-kai-hospital': '/ai-images/weekend-kai-hospital.webp',
+  'weekend-tofu-princess': '/ai-images/weekend-tofu-princess.webp',
+  'weekend-kkam-song': '/ai-images/weekend-kkam-song.webp'
 };
+
+const allEvents = [...events, ...weekendEvents];
 
 function catIllustration({ x, y, fur, eye = '#465044', scale = 1, stripes = '', tail = 'M-43 45q-50 5-38-34 8-21 26-7', pose = 'sit' }) {
   const body = pose === 'curl'
@@ -104,6 +116,8 @@ function loadGameState() {
       return {
         ...initialGameState,
         ...saved,
+        followers: Number.isFinite(saved.followers) ? saved.followers : 0,
+        kaiHospitalDays: Number.isInteger(saved.kaiHospitalDays) ? saved.kaiHospitalDays : 0,
         collectedEvents: Array.isArray(saved.collectedEvents) ? saved.collectedEvents : [],
         salaryMonths: Array.isArray(saved.salaryMonths) ? saved.salaryMonths : [],
         leaveYears: Array.isArray(saved.leaveYears) ? saved.leaveYears : [2026],
@@ -159,13 +173,16 @@ function renderHomeEvent(event, eaten, shortage) {
   document.querySelector('#storyMoneyValue').textContent = gameState.money.toLocaleString('ko-KR');
   document.querySelector('#foodValue').textContent = `${(gameState.foodGrams / 1000).toFixed(2)}kg`;
   document.querySelector('#leaveValue').textContent = `${gameState.leaveDays}일`;
+  document.querySelector('#followersValue').textContent = gameState.followers.toLocaleString('ko-KR');
   document.querySelector('#eventTitle').textContent = event.title;
   document.querySelector('#eventCat').textContent = event.cat;
   document.querySelector('#eventMood').textContent = event.mood;
+  document.querySelector('#eventTypeLabel').textContent = event.weekend ? 'WEEKEND / SPECIAL CAT STORY' : 'TESTER / AFTER WORK · HOME EVENT';
   document.querySelector('#eventStory').textContent = event.story;
+  document.querySelector('#eventArtCaption').textContent = event.weekend ? 'WEEKEND / SPECIAL MOMENT' : 'LITTLE MOMENTS AT HOME';
   const moneyChange = event.money ? ` · ${event.money < 0 ? '−' : '+'}₩${Math.abs(event.money).toLocaleString('ko-KR')}` : '';
   const foodChangeText = event.food ? ` · 사료 +${event.food}g` : '';
-  document.querySelector('#eventOutcome').textContent = `${event.outcome}${moneyChange}${foodChangeText}${gameState.lastNotices.length ? ` · ${gameState.lastNotices.join(' · ')}` : ''}`;
+  document.querySelector('#eventOutcome').textContent = `${event.outcome}${moneyChange}${foodChangeText}`;
   document.querySelector('#foodChange').textContent = `−${eaten}g`;
   updateEventCollection();
   eventArt.dataset.cat = event.id.split('-')[0];
@@ -204,7 +221,7 @@ function applyCalendarIncome(date) {
 }
 
 function updateEventCollection() {
-  document.querySelector('#collectionCount').textContent = `${gameState.collectedEvents.length} / ${events.length}`;
+  document.querySelector('#collectionCount').textContent = `${gameState.collectedEvents.length} / ${allEvents.length}`;
   const collected = gameState.collectedEvents.some((entry) => entry.id === activeEventId);
   collectEventButton.disabled = collected;
   collectEventButton.innerHTML = collected ? '기록에 수집했어요 <span>✓</span>' : '이벤트 수집하기 <span>＋</span>';
@@ -220,7 +237,7 @@ function renderEventAlbum() {
     return;
   }
   gameState.collectedEvents.slice().reverse().forEach(({ id, day }) => {
-    const event = events.find((item) => item.id === id);
+    const event = allEvents.find((item) => item.id === id);
     if (!event) return;
     const entry = document.createElement('article');
     entry.className = 'album-entry';
@@ -272,10 +289,18 @@ function startNextDay(decision) {
     gameState.money -= illnessFee;
     gameState.lastNotices.push(`사료 부족으로 고양이들이 아파 병원비 −₩${illnessFee.toLocaleString('ko-KR')}`);
   }
-  const choices = events.filter((event) => event.id !== gameState.lastEventId);
+  if (gameState.kaiHospitalDays > 0) {
+    gameState.kaiHospitalDays -= 1;
+    gameState.lastNotices.push(gameState.kaiHospitalDays ? `카이 입원 치료 중 · ${gameState.kaiHospitalDays}일 남음` : '카이가 퇴원해 집으로 돌아왔다');
+  }
+  const isWeekend = nextDate.getDay() === 0 || nextDate.getDay() === 6;
+  const eventPool = isWeekend ? weekendEvents : events;
+  const choices = eventPool.filter((event) => event.id !== gameState.lastEventId);
   const event = choices[Math.floor(Math.random() * choices.length)];
   gameState.money += event.money;
   gameState.foodGrams += event.food;
+  gameState.followers += event.followers || 0;
+  if (event.hospitalDays) gameState.kaiHospitalDays = event.hospitalDays;
   gameState.lastEventId = event.id;
   gameState.lastEaten = eaten;
   gameState.lastShortage = decision === 'skip' ? shortage : 0;
@@ -287,7 +312,7 @@ function startNextDay(decision) {
 function beginCatLife() {
   if (gameState.day === 0) startNextDay();
   else {
-    const previousEvent = events.find((event) => event.id === gameState.lastEventId) || events[0];
+  const previousEvent = allEvents.find((event) => event.id === gameState.lastEventId) || events[0];
     renderHomeEvent(previousEvent, gameState.lastEaten, gameState.lastShortage);
   }
   showHome();

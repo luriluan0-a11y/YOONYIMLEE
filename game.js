@@ -15,9 +15,14 @@ const buyFeedButton = document.querySelector('#buyFeedButton');
 const skipFeedButton = document.querySelector('#skipFeedButton');
 const collectEventButton = document.querySelector('#collectEventButton');
 const openEventAlbumButton = document.querySelector('#openEventAlbum');
-const closeEventAlbumButton = document.querySelector('#closeEventAlbum');
-const eventAlbum = document.querySelector('#eventAlbum');
-const albumList = document.querySelector('#albumList');
+const openTitleAlbumButton = document.querySelector('#openTitleAlbum');
+const collectionScreen = document.querySelector('#collectionScreen');
+const closeCollectionButton = document.querySelector('#closeCollection');
+const collectionHomeButton = document.querySelector('#collectionHomeButton');
+const collectionFooterBackButton = document.querySelector('#collectionFooterBack');
+const weekdayCollection = document.querySelector('#weekdayCollection');
+const weekendCollection = document.querySelector('#weekendCollection');
+let collectionReturnScreen = titleScreen;
 
 let started = false;
 let nextLine = 1;
@@ -163,6 +168,23 @@ function showHome() {
   nextDayButton.focus({ preventScroll: true });
 }
 
+function showCollection(fromScreen) {
+  collectionReturnScreen = fromScreen;
+  renderEventAlbum();
+  fromScreen.classList.remove('is-active');
+  fromScreen.setAttribute('aria-hidden', 'true');
+  collectionScreen.classList.add('is-active');
+  collectionScreen.setAttribute('aria-hidden', 'false');
+  closeCollectionButton.focus({ preventScroll: true });
+}
+
+function closeCollection() {
+  collectionScreen.classList.remove('is-active');
+  collectionScreen.setAttribute('aria-hidden', 'true');
+  collectionReturnScreen.classList.add('is-active');
+  collectionReturnScreen.setAttribute('aria-hidden', 'false');
+}
+
 function renderHomeEvent(event, eaten, shortage) {
   const eventArt = document.querySelector('.event-art');
   const eventSceneImage = document.querySelector('#eventSceneImage');
@@ -221,42 +243,63 @@ function applyCalendarIncome(date) {
 }
 
 function updateEventCollection() {
-  document.querySelector('#collectionCount').textContent = `${gameState.collectedEvents.length} / ${allEvents.length}`;
+  const totalCollected = gameState.collectedEvents.length;
+  document.querySelector('#collectionCount').textContent = `${totalCollected} / ${allEvents.length}`;
+  document.querySelector('#titleAlbumCount').textContent = `${totalCollected} / ${allEvents.length}`;
   const collected = gameState.collectedEvents.some((entry) => entry.id === activeEventId);
   collectEventButton.disabled = collected;
   collectEventButton.innerHTML = collected ? '기록에 수집했어요 <span>✓</span>' : '이벤트 수집하기 <span>＋</span>';
 }
 
 function renderEventAlbum() {
-  albumList.replaceChildren();
-  if (gameState.collectedEvents.length === 0) {
-    const emptyNote = document.createElement('p');
-    emptyNote.className = 'album-empty';
-    emptyNote.textContent = '아직 모은 이벤트가 없어요. 오늘의 장면부터 수집해 보세요.';
-    albumList.append(emptyNote);
-    return;
-  }
-  gameState.collectedEvents.slice().reverse().forEach(({ id, day }) => {
-    const event = allEvents.find((item) => item.id === id);
-    if (!event) return;
-    const entry = document.createElement('article');
-    entry.className = 'album-entry';
-    const image = document.createElement('img');
-    image.className = 'album-entry-image';
-    image.src = eventArtwork(event);
-    image.alt = '';
-    const label = document.createElement('span');
-    label.textContent = `DAY ${String(day).padStart(2, '0')} · ${event.cat}`;
-    const title = document.createElement('h3');
-    title.textContent = event.title;
-    const story = document.createElement('p');
-    story.textContent = event.story;
-    const copy = document.createElement('div');
-    copy.className = 'album-entry-copy';
-    copy.append(label, title, story);
-    entry.append(image, copy);
-    albumList.append(entry);
-  });
+  const collectedById = new Map(gameState.collectedEvents.map((entry) => [entry.id, entry]));
+  const renderGroup = (target, list) => {
+    target.replaceChildren();
+    let collectedCount = 0;
+    list.forEach((event, index) => {
+      const record = collectedById.get(event.id);
+      if (record) collectedCount += 1;
+      const card = document.createElement('article');
+      card.className = `collection-card${record ? ' is-collected' : ' is-locked'}`;
+      const art = document.createElement('div');
+      art.className = 'collection-art';
+      const image = document.createElement('img');
+      image.src = eventArtwork(event);
+      image.alt = '';
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      art.append(image);
+      if (!record) {
+        const lock = document.createElement('span');
+        lock.className = 'collection-lock';
+        lock.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg><span>아직 만나지 못한 장면</span>';
+        art.append(lock);
+      }
+      const details = document.createElement('div');
+      details.className = 'collection-card-details';
+      const number = document.createElement('span');
+      number.className = 'collection-card-number';
+      number.textContent = `${String(index + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')} · ${event.cat}`;
+      const title = document.createElement('h4');
+      title.textContent = record ? event.title : '???';
+      const status = document.createElement('span');
+      status.className = 'collection-card-status';
+      status.textContent = record ? `DAY ${String(record.day).padStart(2, '0')} · 수집 완료` : '미수집';
+      details.append(number, title, status);
+      card.append(art, details);
+      target.append(card);
+    });
+    return collectedCount;
+  };
+
+  const weekdayCount = renderGroup(weekdayCollection, events);
+  const weekendCount = renderGroup(weekendCollection, weekendEvents);
+  const total = weekdayCount + weekendCount;
+  document.querySelector('#weekdayCollectionCount').textContent = `${weekdayCount} / ${events.length}`;
+  document.querySelector('#weekendCollectionCount').textContent = `${weekendCount} / ${weekendEvents.length}`;
+  document.querySelector('#albumProgressText').textContent = `${allEvents.length}개의 장면 중 ${total}개 수집`;
+  document.querySelector('#albumProgressBar').style.width = `${(total / allEvents.length) * 100}%`;
+  updateEventCollection();
 }
 
 function startNextDay(decision) {
@@ -333,6 +376,8 @@ function returnToTitle(event) {
   catsScreen.setAttribute('aria-hidden', 'true');
   homeScreen.classList.remove('is-active');
   homeScreen.setAttribute('aria-hidden', 'true');
+  collectionScreen.classList.remove('is-active');
+  collectionScreen.setAttribute('aria-hidden', 'true');
 }
 
 function advanceStory() {
@@ -354,8 +399,16 @@ function advanceStory() {
 startButton.addEventListener('click', startGame);
 window.addEventListener('keydown', (event) => {
   if (!started) {
+    if (!titleScreen.classList.contains('is-active')) {
+      if (event.key === 'Escape' && collectionScreen.classList.contains('is-active')) closeCollection();
+      return;
+    }
     if (event.key === 'Tab' || event.key === 'Shift' || event.key === 'Control' || event.key === 'Alt' || event.metaKey) return;
     startGame();
+    return;
+  }
+  if (event.key === 'Escape' && collectionScreen.classList.contains('is-active')) {
+    closeCollection();
     return;
   }
   if (event.key === 'Enter' && event.target.closest('button, a, input')) return;
@@ -370,14 +423,16 @@ nextDayButton.addEventListener('click', () => startNextDay());
 buyFeedButton.addEventListener('click', () => startNextDay('buy'));
 skipFeedButton.addEventListener('click', () => startNextDay('skip'));
 homeTitleButton.addEventListener('click', returnToTitle);
+collectionHomeButton.addEventListener('click', returnToTitle);
+openTitleAlbumButton.addEventListener('click', () => showCollection(titleScreen));
 collectEventButton.addEventListener('click', () => {
   if (gameState.collectedEvents.some((entry) => entry.id === activeEventId)) return;
   gameState.collectedEvents.push({ id: activeEventId, day: gameState.day });
   localStorage.setItem('cat-house-save', JSON.stringify(gameState));
   updateEventCollection();
 });
-openEventAlbumButton.addEventListener('click', () => {
-  renderEventAlbum();
-  eventAlbum.showModal();
-});
-closeEventAlbumButton.addEventListener('click', () => eventAlbum.close());
+openEventAlbumButton.addEventListener('click', () => showCollection(homeScreen));
+closeCollectionButton.addEventListener('click', closeCollection);
+collectionFooterBackButton.addEventListener('click', closeCollection);
+
+updateEventCollection();

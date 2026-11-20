@@ -38,7 +38,7 @@ const salaryAmount = 3000000;
 const feedBagGrams = 1000;
 const feedBagPrice = 100000;
 const illnessFee = 50000;
-const initialGameState = { day: 0, money: 2450000, foodGrams: 3000, leaveDays: 12, followers: 0, kaiHospitalDays: 0, lastEventId: '', lastEaten: 0, lastShortage: 0, lastNotices: [], salaryMonths: [], leaveYears: [2026], collectedEvents: [] };
+const initialGameState = { day: 0, money: 2450000, foodGrams: 3000, leaveDays: 12, followers: 0, kaiHospitalDays: 0, lastEventId: '', lastWeekendEventId: '', lastEaten: 0, lastShortage: 0, lastNotices: [], salaryMonths: [], leaveYears: [2026], collectedEvents: [] };
 const events = [
   { id: 'tofu-kneading', cat: '두부 · 장모 화이트', mood: '다정한 아침', title: '침대 위의 작은 마사지', story: '이른 아침, 두부가 침대로 올라와 앞발로 이불을 꾹꾹 눌러준다. 잠이 덜 깬 집사 곁에서 한참을 골골거렸다.', outcome: '두부와 포근한 아침을 보냈다. 애정이 조금 깊어졌다.', money: 0, food: 0 },
   { id: 'tofu-greeting', cat: '두부 · 장모 화이트', mood: '반가운 퇴근', title: '현관까지 마중 나온 두부', story: '문을 열자 두부가 꼬리를 세우고 종종걸음으로 다가온다. 오늘 하루의 피로가 조금 풀리는 기분이다.', outcome: '두부가 먼저 다가와 반겨주었다.', money: 0, food: 0 },
@@ -121,6 +121,7 @@ function loadGameState() {
       return {
         ...initialGameState,
         ...saved,
+        lastWeekendEventId: saved.lastWeekendEventId || (weekendEvents.some((event) => event.id === saved.lastEventId) ? saved.lastEventId : ''),
         followers: Number.isFinite(saved.followers) ? saved.followers : 0,
         kaiHospitalDays: Number.isInteger(saved.kaiHospitalDays) ? saved.kaiHospitalDays : 0,
         collectedEvents: Array.isArray(saved.collectedEvents) ? saved.collectedEvents : [],
@@ -338,13 +339,15 @@ function startNextDay(decision) {
   }
   const isWeekend = nextDate.getDay() === 0 || nextDate.getDay() === 6;
   const eventPool = isWeekend ? weekendEvents : events;
-  const choices = eventPool.filter((event) => event.id !== gameState.lastEventId);
+  const previousEventId = isWeekend ? gameState.lastWeekendEventId : gameState.lastEventId;
+  const choices = eventPool.filter((event) => event.id !== previousEventId);
   const event = choices[Math.floor(Math.random() * choices.length)];
   gameState.money += event.money;
   gameState.foodGrams += event.food;
   gameState.followers += event.followers || 0;
   if (event.hospitalDays) gameState.kaiHospitalDays = event.hospitalDays;
   gameState.lastEventId = event.id;
+  if (isWeekend) gameState.lastWeekendEventId = event.id;
   gameState.lastEaten = eaten;
   gameState.lastShortage = decision === 'skip' ? shortage : 0;
   localStorage.setItem('cat-house-save', JSON.stringify(gameState));

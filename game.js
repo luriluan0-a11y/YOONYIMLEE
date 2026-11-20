@@ -56,7 +56,8 @@ const weekendEvents = [
   { id: 'weekend-kkam-song', cat: '깜댕이 · 블랙 캣', mood: '행복 충전', title: '낭만고양이와 깜댕이', story: '까칠한 깜댕이가 내가 부르는 낭만고양이 노래에 반응해 고개를 까딱인다. 그 모습이 너무 예뻐서 한참을 바라봤다.', outcome: '집사의 행복 충전 완료!', money: 0, food: 0, followers: 0, weekend: true },
   { id: 'weekend-kai-contest', cat: '카이 · 블랙 태비', mood: '1등 수상!', title: '멋진 고양이 콘테스트 우승!', story: '카이가 멋진 고양이 콘테스트에 나가 당당히 1등을 했다! 반짝이는 트로피를 받은 카이가 무척 자랑스럽다.', outcome: '우승 상금 획득!', money: 300000, food: 0, followers: 0, weekend: true },
   { id: 'weekend-cheese-walk', cat: '치즈 · 치즈 태비', mood: '바람 좋은 산책', title: '포대기 속 치즈와 산책', story: '치즈가 답답해하는 것 같아 포대기에 안고 산책을 나왔다. 기분이 좋은지 눈을 꼭 감고 바람을 맞는 모습이 너무 귀여웠다!', outcome: '치즈와 기분 좋은 산책을 했다.', money: 0, food: 0, followers: 0, weekend: true },
-  { id: 'weekend-tofu-mermaid', cat: '두부 · 장모 화이트', mood: '인어공주 촬영회', title: '두부의 인어공주', story: '두부에게 인어공주 의상을 입혀 사진을 찍었는데 인기가 대폭발했다! 바닷속 공주님처럼 예쁜 두부의 사진에 모두가 푹 빠졌다.', outcome: '인스타그램 팔로워가 200명 늘었다.', money: 0, food: 0, followers: 200, weekend: true }
+  { id: 'weekend-tofu-mermaid', cat: '두부 · 장모 화이트', mood: '인어공주 촬영회', title: '두부의 인어공주', story: '두부에게 인어공주 의상을 입혀 사진을 찍었는데 인기가 대폭발했다! 바닷속 공주님처럼 예쁜 두부의 사진에 모두가 푹 빠졌다.', outcome: '인스타그램 팔로워가 200명 늘었다.', money: 0, food: 0, followers: 200, weekend: true },
+  { id: 'weekend-kkam-partyhat', cat: '깜댕이 · 블랙 캣', mood: '처음 안긴 날', title: '빨간 꼬깔모자와 깜댕이', story: '깜댕이에게 빨간 꼬깔모자를 씌워주었다. 그런데 까칠한 깜댕이가 먼저 내게 다가와 품에 안겼다! 따뜻하게 기대어 있는 깜댕이를 보니 너무 행복했다.', outcome: '깜댕이가 먼저 품에 안기는 특별한 순간을 보냈다.', money: 0, food: 0, followers: 0, weekend: true }
 ];
 const generatedEventArt = {
   'tofu-kneading': '/ai-images/event-tofu-kneading.webp',
@@ -73,7 +74,8 @@ const generatedEventArt = {
   'weekend-kkam-song': '/ai-images/weekend-kkam-song.webp',
   'weekend-kai-contest': '/ai-images/weekend-kai-contest.webp',
   'weekend-cheese-walk': '/ai-images/weekend-cheese-walk.webp',
-  'weekend-tofu-mermaid': '/ai-images/weekend-tofu-mermaid.webp'
+  'weekend-tofu-mermaid': '/ai-images/weekend-tofu-mermaid.webp',
+  'weekend-kkam-partyhat': '/ai-images/weekend-kkam-partyhat.webp'
 };
 
 const allEvents = [...events, ...weekendEvents];

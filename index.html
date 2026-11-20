@@ -1,425 +1,241 @@
 <!doctype html>
 <html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>이윤임 · 게임 QA 포트폴리오</title>
-<meta name="description" content="작은 오류까지 끝까지 확인하는 신입 게임 QA 이윤임의 포트폴리오">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<style>
-  :root {
-    --bg: #f7f7f5;
-    --surface: #ffffff;
-    --text: #1d1f23;
-    --muted: #5f6570;
-    --line: #e4e4e0;
-    --accent: #2f6fed;
-    --accent-soft: #e8efff;
-    --ok: #1f8a5b;
-    --ok-soft: #e3f4ec;
-    --warn: #b4570b;
-    --warn-soft: #fdf0e2;
-    --radius: 14px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #121417;
-      --surface: #1b1e23;
-      --text: #e9eaec;
-      --muted: #a2a8b3;
-      --line: #2c3037;
-      --accent: #7aa2ff;
-      --accent-soft: #1f2a44;
-      --ok: #5fd39c;
-      --ok-soft: #173326;
-      --warn: #f2a65a;
-      --warn-soft: #3a2a18;
-    }
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    line-height: 1.7;
-    word-break: keep-all;
-  }
-  a { color: var(--accent); }
-  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
-
-  /* 상단 메뉴 */
-  nav {
-    position: sticky; top: 0; z-index: 10;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
-  }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 12px; }
-  nav .logo { font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; }
-  nav ul { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; overflow-x: auto; }
-  nav ul a { color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap; }
-  nav ul a:hover { color: var(--text); }
-
-  /* 첫 화면 */
-  header.hero { padding: 72px 0 48px; }
-  .eyebrow { display: inline-block; font-size: 13px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 999px; }
-  .hero h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.25; margin: 16px 0 12px; letter-spacing: -0.02em; }
-  .hero h1 em { font-style: normal; color: var(--accent); }
-  .hero p.lead { font-size: 18px; color: var(--muted); max-width: 640px; margin: 0 0 24px; }
-  .btns { display: flex; flex-wrap: wrap; gap: 10px; }
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--line); color: var(--text); background: var(--surface); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  @media (prefers-color-scheme: dark) { .btn.primary { color: #0d1220; } }
-
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 40px; }
-  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
-  .stat b { display: block; font-size: 28px; line-height: 1.2; }
-  .stat span { font-size: 13px; color: var(--muted); }
-
-  /* 공통 섹션 */
-  section { padding: 56px 0; border-top: 1px solid var(--line); }
-  section h2 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.01em; }
-  section .sub { color: var(--muted); margin: 0 0 28px; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-  .card h3 { margin: 0 0 8px; font-size: 18px; }
-  .card p { margin: 0; color: var(--muted); font-size: 15px; }
-
-  /* 소개 */
-  .story { font-size: 16px; }
-  .story p { margin: 0 0 14px; }
-  .story strong { color: var(--text); }
-  .strength .num { font-size: 13px; font-weight: 700; color: var(--accent); }
-
-  /* 프로젝트 */
-  .project { margin-bottom: 18px; }
-  .project-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-  .project-head h3 { font-size: 21px; margin: 0; }
-  .date { font-size: 13px; color: var(--muted); }
-  .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); margin-right: 4px; }
-  .tags { margin: 10px 0 14px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag { font-size: 12.5px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
-  .project p.desc { color: var(--text); margin: 0 0 14px; }
-  .project h4 { font-size: 15px; margin: 20px 0 8px; }
-  .project ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
-  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-  .links a { font-size: 14px; font-weight: 600; text-decoration: none; padding: 6px 12px; border-radius: 8px; background: var(--accent-soft); }
-
-  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { font-size: 13px; color: var(--muted); font-weight: 600; }
-  td .arrow { color: var(--ok); font-weight: 600; }
-  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
-
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
-  .split > div { border-radius: 10px; padding: 14px 16px; font-size: 14.5px; }
-  .split .me { background: var(--ok-soft); }
-  .split .ai { background: var(--warn-soft); }
-  .split b { display: block; margin-bottom: 4px; }
-  .split .me b { color: var(--ok); }
-  .split .ai b { color: var(--warn); }
-
-  /* 기술 */
-  .skill-row { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-  .skill-row:last-child { border-bottom: 0; }
-  .skill-row .cat { font-weight: 700; font-size: 15px; }
-  .skill-row .items { display: flex; flex-wrap: wrap; gap: 6px; }
-  .skill-row .note { width: 100%; font-size: 13.5px; color: var(--muted); margin-top: 4px; }
-
-  /* 이력 */
-  .timeline { list-style: none; margin: 0; padding: 0; }
-  .timeline li { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-  .timeline li:last-child { border-bottom: 0; }
-  .timeline .when { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .timeline b { display: block; }
-  .timeline span { color: var(--muted); font-size: 15px; }
-
-  /* 연락 */
-  .contact { text-align: center; padding: 64px 0 80px; }
-  .contact h2 { font-size: 26px; margin: 0 0 8px; }
-  .contact p { color: var(--muted); margin: 0 0 20px; }
-  footer { text-align: center; font-size: 13px; color: var(--muted); padding: 24px 0 40px; border-top: 1px solid var(--line); }
-
-  /* 학습 기록 */
-  .log-entry { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line); }
-  .log-entry:last-child { border-bottom: 0; }
-  .log-entry time { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .log-entry h3 { font-size: 16px; margin: 0 0 6px; }
-  .log-entry ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
-  .log-entry .more { display: inline-block; margin-top: 10px; font-size: 14px; font-weight: 600; text-decoration: none; padding: 5px 12px; border-radius: 8px; background: var(--accent-soft); }
-
-  @media (max-width: 720px) {
-    .log-entry { grid-template-columns: 1fr; gap: 4px; }
-    nav ul { gap: 14px; }
-    header.hero { padding: 48px 0 32px; }
-    .stats { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-    .stat { padding: 12px; }
-    .stat b { font-size: 22px; }
-    .grid-3, .grid-2, .split { grid-template-columns: 1fr; }
-    .card { padding: 18px; }
-    .skill-row, .timeline li { grid-template-columns: 1fr; gap: 4px; }
-  }
-</style>
-</head>
-<body>
-
-<nav>
-  <div class="wrap">
-    <a class="logo" href="#top">이윤임</a>
-    <ul>
-      <li><a href="#about">소개</a></li>
-      <li><a href="#projects">프로젝트</a></li>
-      <li><a href="#learning">학습 기록</a></li>
-      <li><a href="#skills">기술</a></li>
-      <li><a href="#history">이력</a></li>
-      <li><a href="#contact">연락</a></li>
-    </ul>
-  </div>
-</nav>
-
-<main id="top">
-  <header class="hero">
-    <div class="wrap">
-      <span class="eyebrow">신입 게임 QA 지원</span>
-      <h1>작은 오류도 <em>끝까지 확인하는</em><br>게임 QA, 이윤임입니다.</h1>
-      <p class="lead">컴퓨터공학을 전공했고, AI 코딩 에이전트와 함께 만든 결과물을 직접 검수하며 문제를 찾아 고쳐 왔습니다. 눈에 보이는 결과만 믿지 않고 처음부터 다시 확인합니다.</p>
-      <div class="btns">
-        <a class="btn primary" href="#projects">프로젝트 보기</a>
-        <a class="btn" href="mailto:luriluan0@gmail.com">✉ 이메일 보내기</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#202b37" />
+    <title>집사님, 오늘도 야근인가요?</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="game-shell" id="gameShell">
+      <div class="screen title-screen is-active" id="titleScreen" aria-label="타이틀 화면">
+        <div class="title-copy">
+          <p class="eyebrow">야근과 집사의 사이 냥이들의 마음</p>
+          <h1>집사님,<br /><span>오늘도</span> 야근인가요?</h1>
+          <p class="title-caption">퇴근 뒤의 작은 기적과 주말마다 쌓이는 고양이의 마음</p>
+        </div>
+        <div class="title-cat-scene" aria-hidden="true">
+          <svg viewBox="0 0 1000 430" preserveAspectRatio="none" role="presentation" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="titleSofa" x2="0" y2="1"><stop stop-color="#bd8060"/><stop offset="1" stop-color="#8d5e49"/></linearGradient>
+              <linearGradient id="titleSeat" x2="0" y2="1"><stop stop-color="#c9916d"/><stop offset="1" stop-color="#a66f53"/></linearGradient>
+              <filter id="sofaShadow" x="-.1" y="-.2" width="1.2" height="1.5"><feGaussianBlur stdDeviation="12"/></filter>
+            </defs>
+            <ellipse cx="500" cy="386" rx="426" ry="32" fill="#1e2425" opacity=".3" filter="url(#sofaShadow)"/>
+            <path d="M103 160q0-42 47-42h700q47 0 47 42v164H103z" fill="url(#titleSofa)"/>
+            <path d="M126 163q0-28 31-28h298v138H126zm321-28h296v138H447z" fill="#d19b77" opacity=".3"/>
+            <path d="M78 277q0-26 32-26h780q32 0 32 26v113H78z" fill="url(#titleSeat)"/>
+            <path d="M96 286h808" stroke="#e7b58d" stroke-opacity=".42" stroke-width="3"/>
+            <path d="M121 388v24m757-24v24" stroke="#684b3d" stroke-width="16" stroke-linecap="round"/>
+            <path d="M143 390h712" stroke="#d8b290" stroke-opacity=".16" stroke-width="3"/>
+            <g transform="translate(248 180)">
+              <path d="M-42 124c-69 12-92-23-67-56 16-21 42-14 42 5 0 14-16 19-25 8" fill="none" stroke="#f4ebdb" stroke-width="15" stroke-linecap="round"/>
+              <path d="M-67 136c-8-48 4-89 29-103 19-11 59-11 78 0 25 14 37 55 29 103l-13 23h-111z" fill="#f4ebdb"/>
+              <path d="M-64 121q-7-61 13-83m94 83q7-61-13-83m-69 85q-7 18 2 34m48-34q7 18-2 34" fill="none" stroke="#dcd0bc" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+              <path d="M-64 48-68-4l46 29m85 23 4-52-46 29" fill="#f4ebdb" stroke="#e7ddcd" stroke-width="3" stroke-linejoin="round"/>
+              <path d="m-56 26-2-17 29 23m60-6L60 9l-2 17" fill="#d9a09a"/>
+              <ellipse cx="-31" cy="65" rx="5" ry="8" fill="#43514a"/><ellipse cx="31" cy="65" rx="5" ry="8" fill="#43514a"/>
+              <path d="m-4 82 4 4 4-4" fill="none" stroke="#bd8175" stroke-width="4" stroke-linecap="round"/>
+              <path d="M0 86q-9 13-20 6m20-6q9 13 20 6" fill="none" stroke="#bd8175" stroke-width="3" stroke-linecap="round"/>
+              <path d="m-22 86-42-7m42 15-45 4m111-12 42-7m-42 15 45 4" stroke="#b9afa0" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <g transform="translate(418 180)">
+              <path d="M-40 126c-61 5-78-29-52-54 19-18 43-8 39 9-3 13-18 14-25 3" fill="none" stroke="#d99655" stroke-width="15" stroke-linecap="round"/>
+              <path d="M-64 137c-8-48 4-89 29-103 19-11 59-11 78 0 25 14 37 55 29 103l-13 22h-111z" fill="#df9e58"/>
+              <path d="M-58 56q21 12 6 34m105-34q-21 12-6 34M-53 118l18 14m88-14-18 14" fill="none" stroke="#aa6b38" stroke-width="7" stroke-linecap="round"/>
+              <path d="M-64 48-68-4l46 29m85 23 4-52-46 29" fill="#d88f4d" stroke="#c58243" stroke-width="3" stroke-linejoin="round"/>
+              <path d="m-56 26-2-17 29 23m60-6L60 9l-2 17" fill="#c88078"/>
+              <ellipse cx="-31" cy="65" rx="5" ry="8" fill="#443d34"/><ellipse cx="31" cy="65" rx="5" ry="8" fill="#443d34"/>
+              <path d="m-4 82 4 4 4-4" fill="none" stroke="#8f5d50" stroke-width="4" stroke-linecap="round"/><path d="M0 86q-9 13-20 6m20-6q9 13 20 6" fill="none" stroke="#8f5d50" stroke-width="3" stroke-linecap="round"/>
+              <path d="m-22 86-42-7m42 15-45 4m111-12 42-7m-42 15 45 4" stroke="#f1d9bb" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <g transform="translate(588 180)">
+              <path d="M40 125c60 4 76-28 51-53-19-18-43-8-39 9 3 13 18 14 25 3" fill="none" stroke="#48504e" stroke-width="15" stroke-linecap="round"/>
+              <path d="M-64 137c-8-48 4-89 29-103 19-11 59-11 78 0 25 14 37 55 29 103l-13 22h-111z" fill="#505a59"/>
+              <path d="M-58 56q21 12 6 34m105-34q-21 12-6 34M-53 118l18 14m88-14-18 14" fill="none" stroke="#343d3c" stroke-width="8" stroke-linecap="round"/>
+              <path d="M-64 48-68-4l46 29m85 23 4-52-46 29" fill="#485251" stroke="#414a49" stroke-width="3" stroke-linejoin="round"/>
+              <path d="m-56 26-2-17 29 23m60-6L60 9l-2 17" fill="#b9847d"/>
+              <ellipse cx="-31" cy="65" rx="5" ry="8" fill="#dec77d"/><ellipse cx="31" cy="65" rx="5" ry="8" fill="#dec77d"/>
+              <path d="m-4 82 4 4 4-4" fill="none" stroke="#c39487" stroke-width="4" stroke-linecap="round"/><path d="M0 86q-9 13-20 6m20-6q9 13 20 6" fill="none" stroke="#c39487" stroke-width="3" stroke-linecap="round"/>
+              <path d="m-22 86-42-7m42 15-45 4m111-12 42-7m-42 15 45 4" stroke="#d1d0c4" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <g transform="translate(755 180)">
+              <path d="M43 126c68 7 82-27 55-53-19-18-43-8-39 9 3 13 18 14 25 3" fill="none" stroke="#25282e" stroke-width="15" stroke-linecap="round"/>
+              <path d="M-64 137c-8-48 4-89 29-103 19-11 59-11 78 0 25 14 37 55 29 103l-13 22h-111z" fill="#292c33"/>
+              <path d="M-64 48-68-4l46 29m85 23 4-52-46 29" fill="#24272d" stroke="#202329" stroke-width="3" stroke-linejoin="round"/>
+              <path d="m-56 26-2-17 29 23m60-6L60 9l-2 17" fill="#785c62"/>
+              <ellipse cx="-31" cy="65" rx="5" ry="8" fill="#e5c76e"/><ellipse cx="31" cy="65" rx="5" ry="8" fill="#e5c76e"/>
+              <path d="m-4 82 4 4 4-4" fill="none" stroke="#c28e89" stroke-width="4" stroke-linecap="round"/><path d="M0 86q-9 13-20 6m20-6q9 13 20 6" fill="none" stroke="#c28e89" stroke-width="3" stroke-linecap="round"/>
+              <path d="m-22 86-42-7m42 15-45 4m111-12 42-7m-42 15 45 4" stroke="#a5a4a0" stroke-width="2" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+        <div class="room-scene" aria-hidden="true">
+          <svg class="title-art" viewBox="0 0 1400 620" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="roomWall" x2="0" y2="1"><stop stop-color="#657780"/><stop offset=".72" stop-color="#495e68"/><stop offset="1" stop-color="#344650"/></linearGradient>
+              <linearGradient id="nightSky" x2=".3" y2="1"><stop stop-color="#455b6d"/><stop offset="1" stop-color="#dda879"/></linearGradient>
+              <linearGradient id="sofaVelvet" x2="0" y2="1"><stop stop-color="#c28c67"/><stop offset="1" stop-color="#805945"/></linearGradient>
+              <linearGradient id="woodFloor" x2="0" y2="1"><stop stop-color="#a98768"/><stop offset="1" stop-color="#665348"/></linearGradient>
+              <radialGradient id="lampGlow"><stop stop-color="#f5d59b" stop-opacity=".7"/><stop offset="1" stop-color="#f5d59b" stop-opacity="0"/></radialGradient>
+              <pattern id="wallSpeckle" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M0 37.5H38" stroke="#d4d2bd" stroke-opacity=".07"/><circle cx="5" cy="8" r="1" fill="#f3e3c9" fill-opacity=".1"/></pattern>
+              <filter id="softShadow" x="-.3" y="-.3" width="1.6" height="1.8"><feGaussianBlur stdDeviation="13"/></filter>
+              <g id="catBase">
+                <ellipse cx="0" cy="92" rx="77" ry="15" fill="#1e2a2c" opacity=".27"/>
+                <path d="M-53 70c-24-8-35-28-24-46 7-12 21-12 28-3 9 12-8 19-17 11" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+                <path d="M-48 78c-7-28 1-50 22-57 20-7 54-3 67 13 10 12 14 29 12 47l-8 10h-83z" fill="currentColor"/>
+                <path d="M-27 76v10m51-10v10" stroke="#f2dfbd" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>
+                <path d="M-34 21-38-9l26 15m39 15L33-9 10 6" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="4"/>
+                <path d="m-30 10-1-11 12 8m42 3 1-11L12 8" fill="#d99e91" opacity=".8"/>
+                <ellipse cx="0" cy="31" rx="42" ry="34" fill="currentColor"/>
+                <path d="M-38 26c11-4 21-4 29 0m18 0c9-4 18-4 29 0" stroke="#fff1d7" stroke-opacity=".2" stroke-width="5"/>
+                <ellipse cx="-15" cy="32" rx="4" ry="6" fill="#263738"/><ellipse cx="15" cy="32" rx="4" ry="6" fill="#263738"/>
+                <path d="m-3 43 3 3 3-3" fill="none" stroke="#9a6862" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M-2 47q-6 7-13 3m17-3q6 7 13 3" fill="none" stroke="#9a6862" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M-19 45-44 42m25 8-26 3m64-8 25-3m-25 8 26 3" stroke="#f7ebd4" stroke-opacity=".74" stroke-width="1.5"/>
+              </g>
+            </defs>
+            <path fill="url(#roomWall)" d="M0 0h1400v410H0z"/><path fill="url(#wallSpeckle)" d="M0 0h1400v410H0z"/>
+            <path d="M0 408h1400v18H0z" fill="#ddc7a3"/><path d="M0 426h1400v194H0z" fill="url(#woodFloor)"/>
+            <path d="M0 471h1400M0 542h1400M230 427v44m310 0v71m325-71v71m290-71v71" stroke="#dfc5a0" stroke-opacity=".12" stroke-width="3"/>
+            <g opacity=".25" stroke="#c1c9ba" stroke-width="2"><path d="M70 0v400m234-400v400m798-400v400m230-400v400"/></g>
+            <ellipse cx="1038" cy="217" rx="260" ry="220" fill="url(#lampGlow)" opacity=".48"/>
+            <g>
+              <rect x="872" y="32" width="365" height="276" rx="3" fill="#393f42" opacity=".28" transform="translate(8 12)"/>
+              <rect x="860" y="20" width="365" height="276" rx="3" fill="#c5ae8d"/><rect x="872" y="32" width="341" height="252" fill="url(#nightSky)"/>
+              <circle cx="1121" cy="91" r="29" fill="#f3d6a1"/><circle cx="1133" cy="82" r="28" fill="#76808a"/>
+              <g fill="#f7e9ce" opacity=".85"><circle cx="918" cy="81" r="2"/><circle cx="1000" cy="59" r="2.5"/><circle cx="1064" cy="125" r="1.8"/><circle cx="1171" cy="154" r="2"/><path d="m953 121 3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/></g>
+              <path d="M872 211h341v73H872z" fill="#465763"/><path d="M891 194h29v90h-29zm43 12h19v78h-19zm54-22h33v100h-33zm59 23h22v77h-22zm62-15h35v92h-35z" fill="#374953"/>
+              <path d="M1040 32v252m-168-116h341" stroke="#c5ae8d" stroke-width="11"/><path d="M851 20h18v277h-18zm367 0h18v277h-18z" fill="#8e7964"/>
+              <path d="M844 15h27v288h-27zm374 0h27v288h-27z" fill="#b79471" opacity=".8"/>
+            </g>
+            <g>
+              <path d="M80 244h263v13H80z" fill="#96795f"/><path d="M95 257h9v101h-9zm237 0h9v101h-9z" fill="#765e4e"/>
+              <path d="M110 211h25v32h-25z" fill="#c28e67"/><path d="M143 198h19v45h-19z" fill="#6f8880"/><path d="M169 217h30v26h-30z" fill="#d1bb91"/><path d="M209 188h20v55h-20z" fill="#a46e53"/>
+              <path d="M246 227q0-28 22-28t22 28v16h-44z" fill="#d5c39f"/><path d="M259 199v-19h4v19" stroke="#8b9077" stroke-width="3"/><path d="M249 207q12-13 25 0" fill="none" stroke="#8b9077" stroke-width="3"/>
+              <path d="M283 238q4-29 25-29t22 29" fill="#657a71"/><ellipse cx="305" cy="210" rx="21" ry="8" fill="#819184"/>
+            </g>
+            <g>
+              <ellipse cx="152" cy="400" rx="95" ry="75" fill="url(#lampGlow)"/>
+              <path d="M153 405V222" stroke="#d5b98c" stroke-width="8"/><path d="M122 226h62l25 57h-112z" fill="#e4bb7f"/><path d="M137 226h32l17 43h-66z" fill="#f5dca8" opacity=".75"/><path d="M130 410h48" stroke="#d5b98c" stroke-width="8" stroke-linecap="round"/>
+              <ellipse cx="151" cy="286" rx="63" ry="46" fill="url(#lampGlow)" opacity=".4"/>
+            </g>
+            <ellipse cx="696" cy="539" rx="507" ry="64" fill="#333d3c" opacity=".3"/>
+            <path d="M281 371q0-30 34-30h726q38 0 38 36v89H281z" fill="#664a3e"/><path d="M301 294q0-45 43-45h667q42 0 42 43v113H301z" fill="url(#sofaVelvet)"/>
+            <path d="M319 302q0-35 34-35h320v116H319zm373-35h307q34 0 34 34v82H692z" fill="#d0a17b" opacity=".34"/>
+            <path d="M273 379q0-27 31-27h766q34 0 34 28v77H273z" fill="#bb8967"/><path d="M285 389h792" stroke="#e0b18a" stroke-opacity=".42" stroke-width="3"/><path d="M337 455v41m692-41v41" stroke="#634c40" stroke-width="12" stroke-linecap="round"/>
+            <path d="M417 383q-25-27-7-53 15-21 39-7 19 12 6 27-9 10-20 0" fill="none" stroke="#efe5d2" stroke-width="12" stroke-linecap="round"/>
+            <g transform="translate(473 294) scale(.84)" style="color:#f0e7d4"><use href="#catBase"/></g>
+            <g transform="translate(638 295) scale(.83)" style="color:#d89362"><use href="#catBase"/><path d="M-17 5-10 21m19-16L3 21" stroke="#f1d0a1" stroke-width="4" opacity=".8"/></g>
+            <g transform="translate(802 302) scale(.78)" style="color:#555e60"><use href="#catBase"/><path d="M-7 4 0 20m8-16L5 22" stroke="#b5aa88" stroke-width="4" opacity=".8"/></g>
+            <g transform="translate(961 306) scale(.74)" style="color:#252c30"><use href="#catBase"/><path d="M-28 25q28 18 56 0" fill="#3b4142" opacity=".88"/><path d="m-26 17 10 8m32-8L6 25" stroke="#92918a" stroke-width="3" opacity=".7"/></g>
+            <g>
+              <path d="M1261 414v-105" stroke="#7d8c69" stroke-width="6"/><path d="M1260 357q-42-43-58-20 5 30 58 30m4-37q29-47 54-30-2 32-54 40m-1 63q-39-42-53-20 7 29 53 29m3-27q35-38 53-17-4 27-54 32" fill="#829477"/>
+              <path d="M1218 402h91l-11 67h-67z" fill="#c17d5d"/><path d="M1215 404h97v11h-97z" fill="#d39470"/>
+            </g>
+            <path d="M0 410h1400" stroke="#ead6b3" stroke-width="5"/><path d="M0 415h1400" stroke="#2f3e43" stroke-opacity=".3" stroke-width="4"/>
+          </svg>
+        </div>
+        <button class="start-prompt" id="startButton" type="button" aria-label="아무 키나 눌러 게임 시작">
+          <span class="key-hint"><span class="keycap">↵</span> PRESS ANY KEY TO START</span>
+          <span class="touch-hint">화면을 눌러 시작하기</span>
+        </button>
+        <div class="title-footer"><span>© 집사 생활 기록부</span><span>키보드 아무 키 / 화면 터치</span></div>
       </div>
 
-      <div class="stats">
-        <div class="stat"><b>21건</b><span>모아서 정리한 게임 QA 공고</span></div>
-        <div class="stat"><b>6건</b><span>검수하며 찾아 고친 문제</span></div>
-        <div class="stat"><b>1회</b><span>스터디 사례 발표</span></div>
-      </div>
-    </div>
-  </header>
-
-  <section id="about">
-    <div class="wrap">
-      <h2>소개</h2>
-      <p class="sub">오류 32개가 가르쳐 준 것</p>
-
-      <div class="card story">
-        <p>어린 시절 아버지께서 컴퓨터 옆에 놓아두신 프로그래밍 책 한 권으로 코딩을 시작했습니다. 게임을 하면서 "이 화면 뒤에서는 어떤 코드가 돌아가고 있을까?"라는 궁금증이 커졌습니다.</p>
-        <p>혼자 공부하던 때 한 번에 <strong>오류 32개</strong>를 마주한 적이 있습니다. 30개는 하나씩 고쳤지만, 마지막 2개는 오류 메시지조차 원인을 알려 주지 않았습니다. 코드를 처음부터 한 줄씩 다시 읽었고, 대부분의 문제가 <strong>아주 작은 오타</strong>에서 시작된다는 것을 알게 되었습니다.</p>
-        <p style="margin:0">그 뒤로 눈에 보이는 결과만 믿지 않고 직접 확인하는 습관이 생겼습니다. 이 습관을 게임 QA에서 살리고 싶습니다.</p>
-      </div>
-
-      <div class="grid-3" style="margin-top:14px">
-        <div class="card strength">
-          <div class="num">강점 01</div>
-          <h3>멈추지 않는 근성</h3>
-          <p>"문제가 풀릴 때까지 멈추지 않는다"는 말을 자주 듣습니다. 모르는 것은 스터디에 직접 찾아가 질문합니다.</p>
-        </div>
-        <div class="card strength">
-          <div class="num">강점 02</div>
-          <h3>놓치지 않는 꼼꼼함</h3>
-          <p>띄어쓰기와 용어 하나까지 맞춥니다. 누가 읽어도 똑같이 이해하는 글이 좋은 버그 리포트라고 믿습니다.</p>
-        </div>
-        <div class="card strength">
-          <div class="num">강점 03</div>
-          <h3>우선순위 가려내기</h3>
-          <p>모든 것을 똑같이 붙잡지 않고, 중요한 것부터 처리합니다. 버그의 심각도를 나누는 QA 방식처럼요.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects">
-    <div class="wrap">
-      <h2>프로젝트</h2>
-      <p class="sub">무엇을 만들었는지보다, 어떻게 확인했는지를 함께 적었습니다.</p>
-
-      <article class="card project">
-        <div class="project-head">
-          <h3><span class="badge">대표</span> 게임 QA 채용 공고 보드</h3>
-          <span class="date">2026.10</span>
-        </div>
-        <p class="desc">게임잡과 알바몬에 흩어진 게임 QA 공고를 자동으로 모아, 필터와 마감일(D-day)을 보여 주는 웹 페이지를 만들고 GitHub Pages로 배포했습니다.</p>
-        <div class="tags">
-          <span class="tag">Python</span><span class="tag">HTML · CSS · JavaScript</span><span class="tag">Git · GitHub Pages</span><span class="tag">Claude Code</span><span class="tag">VS Code</span>
-        </div>
-
-        <h4>기능</h4>
-        <ul>
-          <li>게임잡 QA 공고 10건, 알바몬 게임 QA·테스터 공고 11건 정리 (2026-10-16 기준)</li>
-          <li>"신입 지원 가능", "마감 7일 이내" 필터, 오늘 날짜 기준 D-day 계산</li>
-          <li>제목에 QA·테스터가 없는 공고(게임 운영, 모니터링 등)는 자동으로 제외</li>
-          <li>알바몬 접속이 실패해도 게임잡 결과는 만들어지도록 예외 처리</li>
-          <li>"취업준비"라고 입력하면 수집 → 정리 문서 → 웹 페이지까지 한 번에 만들어지는 자동화</li>
-        </ul>
-
-        <h4>QA 관점에서 찾아 고친 문제 6건</h4>
-        <div class="table-scroll">
-          <table>
-            <thead><tr><th>확인한 방법</th><th>발견한 문제 → 해결</th></tr></thead>
-            <tbody>
-              <tr><td>출력 결과를 직접 읽고 검수</td><td>터미널에서 한글이 깨짐 <span class="arrow">→</span> UTF-8 출력으로 수정</td></tr>
-              <tr><td>정리 문서의 표 확인</td><td>공고 제목의 대괄호가 전각 문자 <code>［ ］</code>로 바뀜 <span class="arrow">→</span> 표기 방식 수정</td></tr>
-              <tr><td>수집 결과와 실제 사이트 화면 비교</td><td>목록 주소로는 QA 필터가 적용되지 않음 <span class="arrow">→</span> 실제 요청 주소와 QA 직무 코드를 찾아 해결</td></tr>
-              <tr><td>검색어별 결과 비교</td><td>"QA 테스터"는 168건 중 대부분이 게임과 무관 <span class="arrow">→</span> "게임QA", "게임테스터"로 변경</td></tr>
-              <tr><td>배포 후 링크 확인</td><td>파일 이름을 바꾸자 예전 링크가 404 <span class="arrow">→</span> 새 링크로 다시 공유</td></tr>
-              <tr><td>공고 링크 표본 확인</td><td>게임잡·알바몬 링크 3개를 열어 정상 응답(200) 확인</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="color:var(--muted);font-size:14px;margin:10px 0 0">실제 파일을 덮어쓰지 않도록 임시 폴더에서 먼저 실행해 결과를 확인한 뒤 반영했습니다.</p>
-
-        <h4>내가 한 일 / AI가 한 일</h4>
-        <div class="split">
-          <div class="me"><b>내가 한 일</b>필요한 기능 정하기, 결과 검수와 수정 요청, 검색어·파일 이름 규칙 결정, GitHub 계정 설정과 배포 결정</div>
-          <div class="ai"><b>AI(Claude Code)가 한 일</b>채용 사이트 구조 분석, 수집 스크립트와 웹 페이지 코드 작성, Git 명령 실행</div>
-        </div>
-
-        <div class="links">
-          <a href="https://luriluan0-a11y.github.io/Source/qa-board/QA_2026-10-16.html" target="_blank" rel="noopener">공고 보드 열기 ↗</a>
-          <a href="https://github.com/luriluan0-a11y/Source/tree/main/qa-board" target="_blank" rel="noopener">GitHub 저장소 ↗</a>
-        </div>
-      </article>
-
-      <div class="grid-2">
-        <article class="card project" style="margin:0">
-          <div class="project-head">
-            <h3>학습 보관함 PARA 정리</h3>
-            <span class="date">2026.10</span>
+      <section class="screen story-screen" id="storyScreen" aria-label="게임 오프닝" aria-hidden="true">
+        <header class="game-header">
+          <a class="mini-logo" href="#" id="homeButton" aria-label="타이틀로 돌아가기">집사님,<br />오늘도 야근인가요?</a>
+          <div class="header-status"><span><i class="status-dot"></i> <span id="storyDate">2026년 1월 1일 · 목요일</span></span><span>저녁 7:42</span></div>
+          <div class="wallet"><span class="coin-icon">₩</span><span id="storyMoneyValue">2,450,000</span></div>
+        </header>
+        <div class="story-layout">
+          <aside class="chapter-note"><span class="note-number">01</span><span class="note-rule"></span><span>새로운 하루</span></aside>
+          <div class="story-content">
+            <div class="story-illustration" aria-hidden="true">
+              <img class="homecoming-art" src="/ai-images/homecoming-scene.webp" alt="달빛이 드는 거실에서 소파에 모여 있는 네 마리 고양이" />
+              <span class="scene-label">MONDAY / AT HOME</span>
+            </div>
+            <div class="dialogue">
+              <div class="speaker"><span class="speaker-mark">집사</span><span>나</span><span class="speaker-line"></span></div>
+              <p id="dialogueText">오늘도 무사히 퇴근. 현관문을 열자, 네 쌍의 눈이 나를 바라본다.</p>
+              <button class="continue-button" id="continueButton" type="button">이야기 계속하기 <span>→</span></button>
+            </div>
           </div>
-          <p class="desc">흩어진 학습 파일을 옵시디언에서 PARA 방법(진행 중인 일 · 계속 챙기는 일 · 참고 자료 · 끝난 일)으로 다시 구성했습니다. 이 사례를 지피터스 스터디에서 발표했습니다.</p>
-          <div class="tags"><span class="tag">옵시디언</span><span class="tag">마크다운</span><span class="tag">PARA</span></div>
-          <ul>
-            <li>폴더 5개 구조 설계, 파일마다 "마감이 있나?" 같은 기준을 따져 직접 분류</li>
-            <li>기준이 애매한 파일은 억지로 넣지 않고 따로 표시</li>
-            <li>하루 기록 · 습관 트래커 · 지식 노트를 링크로 연결</li>
-          </ul>
-        </article>
-
-        <article class="card project" style="margin:0">
-          <div class="project-head">
-            <h3>AI 작업 규칙 문서화</h3>
-            <span class="date">2026.10</span>
-          </div>
-          <p class="desc">AI에게 일을 맡길 때마다 결과가 달라지는 문제를 겪고, 어떤 AI든 같은 규칙으로 일하도록 공통 규칙 파일(<code>AGENTS.md</code>)을 만들었습니다.</p>
-          <div class="tags"><span class="tag">AGENTS.md</span><span class="tag">프롬프트 작성</span><span class="tag">문서화</span></div>
-          <ul>
-            <li>파일 이름에 날짜가 빠진 문제를 발견하고 원인(규칙이 문서에 없었음)을 찾음</li>
-            <li>규칙을 "형식 + 예시 + 예외"로 구체적으로 정리</li>
-            <li>이름이 바뀐 노트 3개와 연결된 링크까지 모두 수정</li>
-          </ul>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="learning">
-    <div class="wrap">
-      <h2>학습 기록</h2>
-      <p class="sub">매주 금요일, 그날 배우고 실습한 것을 정리합니다.</p>
-      <div class="card">
-<!-- LEARNING-LOG:START (자동 업데이트 영역: 최신 날짜가 위, 같은 날짜는 교체) -->
-        <article class="log-entry" data-date="2026-10-30">
-          <time datetime="2026-10-30">2026.10.30</time>
-          <div>
-            <h3>AI 결과 검수: 역할 나누기와 공개 전 확인 단계</h3>
-            <ul>
-              <li>AX특강 4차시 자료에서 AI에게 역할을 맡기고 결과를 확인하는 방법(역할 카드 5칸, 위험별 확인 강도, CTQ·CAC)을 정리</li>
-              <li>정리한 기준으로 내 자동화를 Claude와 함께 검토해, AI가 쓴 학습 기록이 확인 없이 공개되는 문제를 찾고 "초안 → 사람 확인 → 공개" 순서로 변경 (스크립트 문법과 초안 문장 변환 시험)</li>
-              <li>게임 공고 수집 스크립트를 Claude와 함께 개선: 마감 빠른 순 정렬(예시 데이터로 시험), AI 관련 공고 수집 추가(실제 실행으로 결과 확인)</li>
-              <li>AI 작업 규칙을 Claude와 함께 구성: 노트 작성자·읽음 표시 속성을 추가하고, 개인정보 점검 후 특정 폴더의 AI 접근을 권한 설정으로 차단 (접근 거부 시험으로 확인)</li>
-              <li>CLI, MCP, 하네스 개념을 정리하고, Claude와 문답하며 Python 공고 수집 스크립트 읽기를 시작 (파일 구성, 변수, 주석, 서버에 보내는 요청 값)</li>
-            </ul>
-          </div>
-        </article>
-        <article class="log-entry" data-date="2026-10-23">
-          <time datetime="2026-10-23">2026.10.23</time>
-          <div>
-            <h3>자동화 기초: 예약 실행부터 자동 배포·알림까지</h3>
-            <ul>
-              <li>크론잡(예약 실행)의 개념과 "분 시 일 월 요일" 시간표 읽는 법을 정리하고, Claude와 함께 Windows 작업 스케줄러에 예약 작업(30분 자동 업로드, 금요일 학습 요약)을 구성해 시험 실행으로 동작 확인</li>
-              <li>포트폴리오 사이트를 제작하고, GitHub 저장소와 연결해 바뀐 파일만 자동으로 올리도록 구성. 업로드 성공·실패는 텔레그램 봇으로 알림 (PowerShell, Git, GitHub Pages, 토큰은 파일에 남기지 않음)</li>
-              <li>텔레그램 봇을 직접 만들고, 10분마다 문장 조합(12×12×12=1,728개) 중 안 보낸 메시지를 보내는 예약 작업을 Claude와 함께 구성. 검토하면서 약 12일 뒤 메시지 소진, 야간 알림 문제를 찾아 개선 과제로 기록</li>
-              <li>규칙 누락으로 생긴 노트 이름 오류를 찾아 고치고, 여러 AI가 같은 규칙으로 일하도록 공통 규칙 파일(AGENTS.md)로 정리</li>
-              <li>IDE(통합 개발 환경)의 구성 요소를 정리하고, 게임 QA 공고 수집 스크립트를 실행해 신규 공고 정리</li>
-            </ul>
-            <a class="more" href="cron-job.html">크론잡 실습 자세히 보기 →</a>
-            <a class="more" href="leo-bot.html">🐱 레오군 추앙 봇 보기 →</a>
-          </div>
-        </article>
-<!-- LEARNING-LOG:END -->
-      </div>
-    </div>
-  </section>
-
-  <section id="skills">
-    <div class="wrap">
-      <h2>기술</h2>
-      <p class="sub">직접 써 본 것만 적었습니다.</p>
-      <div class="card">
-        <div class="skill-row">
-          <div class="cat">언어</div>
-          <div class="items">
-            <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Python (스크립트 활용)</span>
-          </div>
+          <aside class="side-note"><span>WORK ENDS.<br />LIFE BEGINS.</span><i>✳</i></aside>
         </div>
-        <div class="skill-row">
-          <div class="cat">도구</div>
-          <div class="items">
-            <span class="tag">Git</span><span class="tag">GitHub</span><span class="tag">GitHub Pages</span><span class="tag">GitHub CLI</span><span class="tag">VS Code</span><span class="tag">옵시디언</span><span class="tag">마크다운</span>
+        <footer class="story-footer"><span>집에 돌아왔습니다</span><span>대화 이어가기 <kbd>ENTER</kbd></span></footer>
+      </section>
+
+      <section class="screen cats-screen" id="catsScreen" aria-label="우리 집 고양이들" aria-hidden="true">
+        <header class="cats-header">
+          <a class="mini-logo" href="#" id="catsHomeButton" aria-label="타이틀로 돌아가기">집사님,<br />오늘도 야근인가요?</a>
+          <div class="cats-chapter"><span>CAT FILES</span><span>01 — 04</span></div>
+          <div class="cats-day">우리 집 식구 소개</div>
+        </header>
+        <div class="cats-content">
+          <div class="cats-heading">
+            <div><p class="cats-kicker">퇴근 후 가장 먼저 만나는 얼굴들</p><h2>우리 집 고양이들</h2></div>
+            <p>각자의 속도로 가까워지는 네 마리.<br />함께 보내는 시간이 추억이 됩니다.</p>
           </div>
-        </div>
-        <div class="skill-row">
-          <div class="cat">AI</div>
-          <div class="items">
-            <span class="tag">Claude Code (AI 코딩 에이전트)</span><span class="tag">프롬프트 작성</span><span class="tag">AGENTS.md</span>
+          <div class="cat-roster">
+            <article class="cat-profile tofu-profile">
+              <div class="profile-art tofu-art" aria-hidden="true"><svg viewBox="0 0 220 180"><ellipse cx="110" cy="158" rx="73" ry="10" fill="#59614f" opacity=".16"/><path d="M55 139c-18-8-27-25-17-39 7-9 19-7 22 2 3 8-6 13-12 8m117 30c18-8 27-25 17-39-7-9-19-7-22 2-3 8 6 13 12 8" fill="none" stroke="#f5efe1" stroke-width="14" stroke-linecap="round"/><path d="M57 141q-8-46 9-68 17-22 44-15 29-8 47 15 17 22 8 68-2 13-20 14H77q-17-1-20-14" fill="#f7f1e6"/><path d="m71 79-3-37 34 23m52 14 3-37-34 23" fill="#f7f1e6" stroke="#eee3d1" stroke-width="3"/><path d="m76 65-1-13 18 15m46-2 18-13 1 13" fill="#dfa89d"/><ellipse cx="86" cy="91" rx="4" ry="6" fill="#4e5a51"/><ellipse cx="134" cy="91" rx="4" ry="6" fill="#4e5a51"/><path d="m107 105 3 3 3-3m-3 3q-8 9-16 2m16-2q8 9 16 2" fill="none" stroke="#bd8275" stroke-width="2.5" stroke-linecap="round"/><path d="M97 107 72 103m25 10-26 6m52-12 25-4m-25 10 26 6" stroke="#c5bba9" stroke-width="1.5"/><path d="M70 121q40 18 80 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="7"/></svg><span class="art-stamp">SOFT &amp; SWEET</span></div>
+              <div class="profile-copy"><div class="profile-top"><span class="cat-number">01 / 04</span><span class="cat-type">장모 화이트</span></div><h3>두부 <span>TOFU</span></h3><p class="cat-motto">“집사 옆이 제일 좋아.”</p><p class="cat-description">온순하고 상냥한 성격. 처음부터 먼저 다가와 주는, 사랑스러운 고양이예요.</p><div class="trait-list"><span>아무 사료나 잘 먹어요</span><span>특별 간식은 필요 없어요</span><span>이벤트가 자주 발생해요</span></div><div class="cost-row"><span>긴 털 미용 · 1회</span><strong>₩150,000</strong></div></div>
+            </article>
+            <article class="cat-profile cheese-profile">
+              <div class="profile-art cheese-art" aria-hidden="true"><svg viewBox="0 0 220 180"><ellipse cx="110" cy="158" rx="73" ry="10" fill="#8b633e" opacity=".18"/><path d="M56 140c-22-5-29-24-18-37 9-11 20-5 22 3 2 8-7 12-13 7m116 27c22-5 29-24 18-37-9-11-20-5-22 3-2 8 7 12 13 7" fill="none" stroke="#dba057" stroke-width="13" stroke-linecap="round"/><path d="M57 140q-8-47 10-69 17-22 43-14 29-8 46 14 18 22 9 69-3 14-20 15H77q-17-1-20-15" fill="#e3aa5c"/><path d="m70 78-2-36 34 22m52 14 3-36-34 22" fill="#d99d50" stroke="#c78b42" stroke-width="3"/><path d="m76 64-1-13 18 14m46-1 18-13 1 13" fill="#d18f80"/><path d="M81 69q-12 15 1 28m62-28q12 15-1 28m-43-9q-9 10 0 19m29-19q9 10 0 19m-37 26q18 8 36 0" fill="none" stroke="#a9713e" stroke-width="5" stroke-linecap="round"/><ellipse cx="87" cy="92" rx="4" ry="6" fill="#4c463b"/><ellipse cx="133" cy="92" rx="4" ry="6" fill="#4c463b"/><path d="m107 105 3 3 3-3m-3 3q-7 8-14 2m14-2q7 8 14 2" fill="none" stroke="#965e55" stroke-width="2.5" stroke-linecap="round"/><path d="M98 108 75 104m23 10-25 5m49-11 23-4m-23 10 25 5" stroke="#f8e7ca" stroke-width="1.5"/></svg><span class="art-stamp">CHEESE CAT</span></div>
+              <div class="profile-copy"><div class="profile-top"><span class="cat-number">02 / 04</span><span class="cat-type">치즈 태비</span></div><h3>치즈 <span>CHEESE</span></h3><p class="cat-motto">노란 줄무늬 치즈냥이</p><p class="cat-description">치즈냥이라고 불리는 노란색 줄무늬 고양이예요.</p><div class="trait-list"><span>노란색 줄무늬 털</span><span>미용이 따로 필요 없어요</span></div><div class="cost-row"><span>미용</span><strong class="no-cost">필요 없음</strong></div></div>
+            </article>
+            <article class="cat-profile kai-profile">
+              <div class="profile-art kai-art" aria-hidden="true"><svg viewBox="0 0 220 180"><ellipse cx="110" cy="158" rx="73" ry="10" fill="#343d3e" opacity=".2"/><path d="M56 141c-21-8-25-24-14-36 9-10 20-5 21 3 1 8-8 11-13 6m114 27c21-8 25-24 14-36-9-10-20-5-21 3-1 8 8 11 13 6" fill="none" stroke="#555f5d" stroke-width="13" stroke-linecap="round"/><path d="M57 140q-8-47 10-69 17-22 43-14 29-8 46 14 18 22 9 69-3 14-20 15H77q-17-1-20-15" fill="#4e5857"/><path d="m70 78-2-36 34 22m52 14 3-36-34 22" fill="#444d4d" stroke="#3d4646" stroke-width="3"/><path d="m76 64-1-13 18 14m46-1 18-13 1 13" fill="#b68a81"/><path d="M79 70q12 8 5 21m57-21q-12 8-5 21M98 65l12 15 12-15m-30 53 18 6 18-6" fill="none" stroke="#9a9b8b" stroke-width="5" stroke-linecap="round"/><ellipse cx="87" cy="92" rx="4" ry="6" fill="#d1c28c"/><ellipse cx="133" cy="92" rx="4" ry="6" fill="#d1c28c"/><path d="m107 105 3 3 3-3m-3 3q-7 8-14 2m14-2q7 8 14 2" fill="none" stroke="#c49a8d" stroke-width="2.5" stroke-linecap="round"/><path d="M98 108 75 104m23 10-25 5m49-11 23-4m-23 10 25 5" stroke="#d2d0c0" stroke-width="1.5"/></svg><span class="art-stamp">BLACK TABBY</span></div>
+              <div class="profile-copy"><div class="profile-top"><span class="cat-number">03 / 04</span><span class="cat-type">블랙 태비</span></div><h3>카이 <span>KAI</span></h3><p class="cat-motto">검은 줄무늬 블랙 태비</p><p class="cat-description">검은 줄무늬가 있는 고양이예요. 미용 1회에 10만 원이 들어요.</p><div class="trait-list"><span>검은 줄무늬가 있어요</span><span>미용 1회 ₩100,000</span></div><div class="cost-row"><span>미용 · 1회</span><strong>₩100,000</strong></div></div>
+            </article>
+            <article class="cat-profile kkam-profile">
+              <div class="profile-art kkam-art" aria-hidden="true"><svg viewBox="0 0 220 180"><ellipse cx="110" cy="158" rx="73" ry="10" fill="#292b31" opacity=".24"/><path d="M56 141c-21-8-25-24-14-36 9-10 20-5 21 3 1 8-8 11-13 6m114 27c21-8 25-24 14-36-9-10-20-5-21 3-1 8 8 11 13 6" fill="none" stroke="#25282e" stroke-width="13" stroke-linecap="round"/><path d="M57 140q-8-47 10-69 17-22 43-14 29-8 46 14 18 22 9 69-3 14-20 15H77q-17-1-20-15" fill="#292c33"/><path d="m70 78-2-36 34 22m52 14 3-36-34 22" fill="#24272d" stroke="#202329" stroke-width="3"/><path d="m76 64-1-13 18 14m46-1 18-13 1 13" fill="#765d5e"/><ellipse cx="87" cy="92" rx="4" ry="6" fill="#d5bd76"/><ellipse cx="133" cy="92" rx="4" ry="6" fill="#d5bd76"/><path d="m107 105 3 3 3-3m-3 3q-7 8-14 2m14-2q7 8 14 2" fill="none" stroke="#bc8b86" stroke-width="2.5" stroke-linecap="round"/><path d="M98 108 75 104m23 10-25 5m49-11 23-4m-23 10 25 5" stroke="#8f9090" stroke-width="1.5"/><path d="M65 77 81 91m74-14-16 14" stroke="#777d80" stroke-width="3" opacity=".8"/><path d="M76 129q34 9 68 0" fill="none" stroke="#474a50" stroke-width="7"/></svg><span class="art-stamp">MIDNIGHT MOOD</span></div>
+              <div class="profile-copy"><div class="profile-top"><span class="cat-number">04 / 04</span><span class="cat-type">블랙 캣</span></div><h3>깜댕이 <span>KKAMDAENG</span></h3><p class="cat-motto">“흥, 아직 마음 연 거 아니거든.”</p><p class="cat-description">까칠하지만 미워할 수 없는 까만 고양이. 자주 더러워져 피부 관리에 신경 써야 해요.</p><div class="trait-list"><span>낯을 가리고 까칠한 편</span><span>피부병 관리가 필요해요</span><span>미용은 필요 없어요</span></div><div class="cost-row"><span>피부병 관리 지출</span><strong>₩50,000</strong></div></div>
+            </article>
           </div>
+          <div class="roster-note"><span>집사의 메모</span><span>관리는 제때, 친해지는 속도는 천천히.</span><button id="backToStory" type="button">집사 생활 시작하기 <span>→</span></button></div>
         </div>
-        <div class="skill-row">
-          <div class="cat">공부 중</div>
-          <div class="items">
-            <span class="tag">크론잡 (예약 자동 실행)</span><span class="tag">GitHub Actions</span><span class="tag">텔레그램 봇 알림</span>
-            <div class="note">개념을 정리하고 실습을 준비하는 단계입니다.</div>
+      </section>
+
+      <section class="screen home-screen" id="homeScreen" aria-label="퇴근 후 이벤트" aria-hidden="true">
+        <header class="home-header">
+          <a class="mini-logo" href="#" id="homeTitleButton" aria-label="타이틀로 돌아가기">집사님,<br />오늘도 야근인가요?</a>
+          <div class="home-date"><span class="status-dot"></span><span id="dayLabel">2026년 1월 1일 · 목요일</span><span id="timeLabel">저녁 7:42</span></div>
+          <div class="home-resources"><span class="resource-money">₩ <strong id="moneyValue">2,450,000</strong></span><span class="resource-food">사료 <strong id="foodValue">3.00kg</strong></span><span class="resource-leave">연차 <strong id="leaveValue">12일</strong></span></div>
+        </header>
+        <div class="home-content">
+          <div class="home-kicker"><span>TESTER / AFTER WORK · HOME EVENT</span><span class="home-kicker-actions"><button id="openEventAlbum" type="button">수집함 <span id="collectionCount">0 / 8</span></button><span id="dayCount">DAY 01</span></span></div>
+          <div class="home-title"><p>현관문이 열리자, 오늘의 이야기가 시작된다.</p><h2 id="eventTitle">오늘은 어떤 일이 있었을까?</h2></div>
+          <div class="event-layout">
+            <div class="event-art" aria-hidden="true">
+              <img class="event-scene-image" id="eventSceneImage" alt="" />
+              <span class="event-art-caption">LITTLE MOMENTS AT HOME</span>
+            </div>
+            <article class="event-card">
+              <div class="event-card-top"><span id="eventCat">오늘의 고양이</span><span id="eventMood">작은 사건</span></div>
+              <div class="event-story" id="eventStory"></div>
+              <div class="event-outcome" id="eventOutcome"></div>
+              <button class="collect-event-button" id="collectEventButton" type="button">이벤트 수집하기 <span>＋</span></button>
+              <div class="daily-food"><div><span>오늘의 식사</span><small>네 마리 × 아침·점심·저녁</small></div><strong id="foodChange">−360g</strong></div>
+              <p class="food-warning" id="foodWarning" hidden></p>
+              <div class="feed-decision" id="feedDecision" hidden><p id="feedDecisionText"></p><div><button id="buyFeedButton" type="button">사료 1kg 구매 · 100,000원</button><button id="skipFeedButton" type="button">구매하지 않고 진행</button></div></div>
+              <p class="event-notices" id="eventNotices" hidden></p>
+              <button class="next-day-button" id="nextDayButton" type="button">내일로 넘어가기 <span>→</span></button>
+            </article>
           </div>
+          <div class="home-footnote"><span>월급일 매달 20일 · 3,000,000원</span><span>하루 사료 360g · 1kg 100,000원</span><span>연차는 아픈 고양이를 위해 아껴두기</span></div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="history">
-    <div class="wrap">
-      <h2>학력 · 활동</h2>
-      <p class="sub">&nbsp;</p>
-      <div class="card">
-        <ul class="timeline">
-          <li>
-            <div class="when">2026.10 ~</div>
-            <div><b>AX 부트캠프 수강</b><span>유한대학교 AX특강 · AI를 활용한 업무 자동화 실습</span></div>
-          </li>
-          <li>
-            <div class="when">2026.10.19</div>
-            <div><b>지피터스 스터디 사례 발표</b><span>옵시디언 학습 보관함 PARA 정리 사례</span></div>
-          </li>
-          <li>
-            <div class="when">2026.02</div>
-            <div><b>유한대학교 컴퓨터공학 졸업</b><span>웹 페이지 개발 경험</span></div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="contact" id="contact">
-    <div class="wrap">
-      <h2>함께 일하고 싶습니다</h2>
-      <p>게임 QA 채용이나 궁금한 점이 있으면 편하게 연락 주세요.</p>
-      <a class="btn primary" href="mailto:luriluan0@gmail.com">✉ luriluan0@gmail.com</a>
-    </div>
-  </section>
-</main>
-
-<footer>© 2026 이윤임</footer>
-
-</body>
+        <dialog class="event-album" id="eventAlbum" aria-labelledby="albumTitle">
+          <div class="album-heading"><div><span>COLLECTED MOMENTS</span><h2 id="albumTitle">우리 집의 기록</h2></div><button id="closeEventAlbum" type="button" aria-label="수집함 닫기">×</button></div>
+          <p class="album-intro">퇴근 뒤에 만난 작은 사건들을 모아두었어요.</p>
+          <div class="album-list" id="albumList"></div>
+        </dialog>
+      </section>
+    </main>
+    <script src="./game.js"></script>
+  </body>
 </html>

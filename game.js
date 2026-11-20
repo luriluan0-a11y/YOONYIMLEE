@@ -47,12 +47,12 @@ const events = [
 const generatedEventArt = {
   'tofu-kneading': '/ai-images/event-tofu-kneading.webp',
   'tofu-greeting': '/ai-images/event-tofu-greeting.webp',
-  'cheese-snack': '/ai-images/event-cheese-bowl.svg',
-  'cheese-lap': '/ai-images/event-cheese-lap.svg',
-  'kai-mouse': '/ai-images/event-kai-mouse.svg',
-  'kai-toy': '/ai-images/event-kai-toy.svg',
-  'kkam-skin': '/ai-images/event-kkam-care.svg',
-  'kkam-trust': '/ai-images/event-kkam-trust.svg'
+  'cheese-snack': '/ai-images/event-cheese-bowl.webp',
+  'cheese-lap': '/ai-images/event-cheese-lap.webp',
+  'kai-mouse': '/ai-images/event-kai-mouse.webp',
+  'kai-toy': '/ai-images/event-kai-toy.webp',
+  'kkam-skin': '/ai-images/event-kkam-care.webp',
+  'kkam-trust': '/ai-images/event-kkam-trust.webp'
 };
 
 function catIllustration({ x, y, fur, eye = '#465044', scale = 1, stripes = '', tail = 'M-43 45q-50 5-38-34 8-21 26-7', pose = 'sit' }) {

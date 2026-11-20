@@ -53,7 +53,8 @@ const weekendEvents = [
   { id: 'weekend-cheese-ad', cat: '치즈 · 치즈 태비', mood: '첫 광고 촬영', title: '치즈, 광고 모델이 되다!', story: '인스타그램에 올린 치즈 사진을 본 기획사에서 연락이 왔다. 귀여운 치즈가 고양이 사료 광고를 찍게 되었다!', outcome: '광고 수입이 입금되었다.', money: 500000, food: 0, followers: 0, weekend: true },
   { id: 'weekend-kai-hospital', cat: '카이 · 블랙 태비', mood: '마음 아픈 주말', title: '카이가 아파요', story: '카이가 계속 토하고 먹지를 못한다. 병원에 데려가니 며칠 입원해야 한다고 한다. 마음이 너무 아프지만, 지금은 치료가 먼저다.', outcome: '카이 입원 3일 × 하루 200,000원', money: -600000, food: 0, followers: 0, hospitalDays: 3, weekend: true },
   { id: 'weekend-tofu-princess', cat: '두부 · 장모 화이트', mood: '공주님 촬영회', title: '두부의 인생 사진', story: '두부가 무슨 바람이 불었는지 인스타그램에 올릴 사진에 포즈를 너무 잘 잡아준다. 공주님 코스튬까지 완벽하게 소화해 인기 짱!', outcome: '인스타그램 팔로워가 100명 늘었다.', money: 0, food: 0, followers: 100, weekend: true },
-  { id: 'weekend-kkam-song', cat: '깜댕이 · 블랙 캣', mood: '행복 충전', title: '낭만고양이와 깜댕이', story: '까칠한 깜댕이가 내가 부르는 낭만고양이 노래에 반응해 고개를 까딱인다. 그 모습이 너무 예뻐서 한참을 바라봤다.', outcome: '집사의 행복 충전 완료!', money: 0, food: 0, followers: 0, weekend: true }
+  { id: 'weekend-kkam-song', cat: '깜댕이 · 블랙 캣', mood: '행복 충전', title: '낭만고양이와 깜댕이', story: '까칠한 깜댕이가 내가 부르는 낭만고양이 노래에 반응해 고개를 까딱인다. 그 모습이 너무 예뻐서 한참을 바라봤다.', outcome: '집사의 행복 충전 완료!', money: 0, food: 0, followers: 0, weekend: true },
+  { id: 'weekend-kai-contest', cat: '카이 · 블랙 태비', mood: '1등 수상!', title: '멋진 고양이 콘테스트 우승!', story: '카이가 멋진 고양이 콘테스트에 나가 당당히 1등을 했다! 반짝이는 트로피를 받은 카이가 무척 자랑스럽다.', outcome: '우승 상금 획득!', money: 300000, food: 0, followers: 0, weekend: true }
 ];
 const generatedEventArt = {
   'tofu-kneading': '/ai-images/event-tofu-kneading.webp',
@@ -67,7 +68,8 @@ const generatedEventArt = {
   'weekend-cheese-ad': '/ai-images/weekend-cheese-ad.webp',
   'weekend-kai-hospital': '/ai-images/weekend-kai-hospital.webp',
   'weekend-tofu-princess': '/ai-images/weekend-tofu-princess.webp',
-  'weekend-kkam-song': '/ai-images/weekend-kkam-song.webp'
+  'weekend-kkam-song': '/ai-images/weekend-kkam-song.webp',
+  'weekend-kai-contest': '/ai-images/weekend-kai-contest.webp'
 };
 
 const allEvents = [...events, ...weekendEvents];
